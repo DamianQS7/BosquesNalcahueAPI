@@ -1,11 +1,28 @@
+using BosquesNalcahue.API.Mapping;
+using BosquesNalcahue.Application;
+using BosquesNalcahue.Application.Models;
+using Microsoft.Extensions.Options;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.Configure<MongoDbOptions>(builder.Configuration.GetSection(nameof(MongoDbOptions)));
+
+builder.Services.AddSingleton<IMongoDbOptions>
+                    (sp => sp.GetRequiredService<IOptions<MongoDbOptions>>().Value);
+
+builder.Services.AddReportsApp();
+
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.Converters.Add(new ReportConverter());
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

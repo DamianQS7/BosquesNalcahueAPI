@@ -7,7 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BosquesNalcahue.Application\BosquesNalcahue.Application.csproj" />
+    <ProjectReference Include="..\BosquesNalcahue.Contracts\BosquesNalcahue.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

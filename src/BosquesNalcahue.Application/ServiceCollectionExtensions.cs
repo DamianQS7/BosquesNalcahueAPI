@@ -8,22 +8,9 @@ namespace BosquesNalcahue.Application;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddReportsApp(this IServiceCollection services)
     {
         services.AddSingleton<IReportsRepository, ReportsRepository>();
-        return services;
-    }
-
-    public static IServiceCollection ConfigureMongoDb(this IServiceCollection services, IConfiguration config, string sectionKey)
-    {
-        services.Configure<MongoDbOptions>(optionsAction =>
-        {
-            config.GetSection(sectionKey);
-        });
-
-        services.AddSingleton<IMongoDbOptions>
-                            (sp => sp.GetRequiredService<IOptions<MongoDbOptions>>().Value);
-
         return services;
     }
 }
