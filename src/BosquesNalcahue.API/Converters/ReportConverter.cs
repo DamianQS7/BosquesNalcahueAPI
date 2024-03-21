@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace BosquesNalcahue.API.Mapping
+namespace BosquesNalcahue.API.Converters
 {
     public class ReportConverter : JsonConverter<BaseReport>
     {
@@ -10,7 +10,7 @@ namespace BosquesNalcahue.API.Mapping
         {
             var jsonObject = JObject.Load(reader);
 
-            switch (jsonObject["ReportType"].Value<string>())
+            switch (jsonObject["ReportType"]!.Value<string>())
             {
                 case "SingleProductReport":
                     var singleProductReport = new SingleProductReport();
@@ -33,24 +33,5 @@ namespace BosquesNalcahue.API.Mapping
         }
 
         public override bool CanWrite => false;
-
-        //public override void WriteJson(JsonWriter writer, BaseReport value, JsonSerializer serializer)
-        //{
-        //    serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-
-        //    if (value is SingleProductReport singleProductReport)
-        //    {
-        //        serializer.Serialize(writer, singleProductReport);
-        //    }
-        //    else if (value is MultiProductReport multiProductReport)
-        //    {
-        //        serializer.Serialize(writer, multiProductReport);
-        //    }
-        //    else
-        //    {
-        //        throw new InvalidOperationException("Invalid ReportType");
-        //    }
-        //}
-
     }
 }
