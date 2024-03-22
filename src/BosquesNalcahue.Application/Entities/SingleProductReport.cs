@@ -2,8 +2,8 @@
 {
     public class SingleProductReport : BaseReport
     {
-        public string Origin { get; set; }
-        public string ProductType { get; set; }
+        public string? Origin { get; set; }
+        public string? ProductName { get; set; }
         public double TruckHeight { get; set; }
         public double TruckLength { get; set; }
         public int Banks { get; set; }

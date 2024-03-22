@@ -9,6 +9,8 @@ namespace BosquesNalcahue.Application.Entities
     {
         [BsonId] public ObjectId Id { get; set; }
         [BsonElement("_t")] public string? ReportType { get; set; }
+        public string? ProductType { get; set; }
+        public IEnumerable<string>? Species { get; set; }
         public string? OperatorName { get; set; }
         public string? Folio { get; set; }
         public DateTimeOffset Date { get; set; }

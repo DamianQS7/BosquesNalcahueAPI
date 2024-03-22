@@ -17,8 +17,4 @@
     <ProjectReference Include="..\BosquesNalcahue.Contracts\BosquesNalcahue.Contracts.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Mapping\" />
-  </ItemGroup>
-
 </Project>

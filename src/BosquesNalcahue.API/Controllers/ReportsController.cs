@@ -1,25 +1,23 @@
-﻿using BosquesNalcahue.Application.Entities;
+﻿using BosquesNalcahue.API.Mapping;
+using BosquesNalcahue.Application.Entities;
 using BosquesNalcahue.Application.Repositories;
+using BosquesNalcahue.Contracts.Requests;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
 namespace BosquesNalcahue.API.Controllers
 {
     [ApiController]
-    public class ReportsController : ControllerBase
+    public class ReportsController(IReportsRepository reportsRepository) : ControllerBase
     {
-        private readonly IReportsRepository _reportsRepository;
-
-        public ReportsController(IReportsRepository reportsRepository)
-        {
-            _reportsRepository = reportsRepository;
-        }
+        private readonly IReportsRepository _reportsRepository = reportsRepository;
 
         [HttpPost(Endpoints.Reports.Create)]
         public async Task<IActionResult> CreateReport([FromBody] BaseReport report, CancellationToken token = default)
         {
             await _reportsRepository.CreateAsync(report, token);
-            return Ok(report);
+
+            return CreatedAtAction(nameof(GetReportById), new {id = report.Id}, report);
         }
 
         [HttpDelete(Endpoints.Reports.Delete)]
@@ -34,9 +32,13 @@ namespace BosquesNalcahue.API.Controllers
         }
 
         [HttpGet(Endpoints.Reports.GetAll)]
-        public async Task<IActionResult> GetAllReports(CancellationToken token = default)
+        public async Task<IActionResult> GetAllReports(
+            [FromQuery] GetAllReportsRequest request, CancellationToken token = default)
         {
-            var reports = await _reportsRepository.GetAllAsync(token);
+            var filteringOptions = request.MapToFilteringOptions();
+
+            var reports = await _reportsRepository.GetAllAsync(filteringOptions, token);
+            
             return Ok(reports);
         }
 
