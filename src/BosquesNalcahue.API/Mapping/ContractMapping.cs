@@ -9,7 +9,6 @@ namespace BosquesNalcahue.API.Mapping
         {
             return new FilteringOptions
             {
-                ReportType = request.ReportType,
                 OperatorName = request.OperatorName,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,

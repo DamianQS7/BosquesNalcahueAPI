@@ -67,9 +67,6 @@ public class ReportsRepository : IReportsRepository
         var filterBuilder = Builders<BaseReport>.Filter;
         var filter = filterBuilder.Empty;
 
-        if (!string.IsNullOrWhiteSpace(options.ReportType))
-            filter &= filterBuilder.Eq(report => report.ReportType, options.ReportType);
-
         if (!string.IsNullOrWhiteSpace(options.OperatorName))
         {
             var regex = new Regex(options.OperatorName, RegexOptions.IgnoreCase);

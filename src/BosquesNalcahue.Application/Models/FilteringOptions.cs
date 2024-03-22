@@ -8,7 +8,6 @@ namespace BosquesNalcahue.Application.Models
 {
     public class FilteringOptions
     {
-        public string? ReportType { get; init; }
         public string? OperatorName { get; init; }
         public DateTimeOffset? StartDate { get; init; }
         public DateTimeOffset? EndDate { get; init; }
