@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Responses\" />
+    <ProjectReference Include="..\BosquesNalcahue.Application\BosquesNalcahue.Application.csproj" />
   </ItemGroup>
 
 </Project>

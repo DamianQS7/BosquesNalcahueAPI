@@ -35,11 +35,15 @@ namespace BosquesNalcahue.API.Controllers
         public async Task<IActionResult> GetAllReports(
             [FromQuery] GetAllReportsRequest request, CancellationToken token = default)
         {
-            var filteringOptions = request.MapToFilteringOptions();
+            var filteringOptions = request.MapToGetAllReportsOptions();
 
             var reports = await _reportsRepository.GetAllAsync(filteringOptions, token);
+
+            int count = await _reportsRepository.GetTotalReports(filteringOptions, token);
+
+            var response = reports.MapToReportsResponse(filteringOptions.Page, filteringOptions.PageSize, count);
             
-            return Ok(reports);
+            return Ok(response);
         }
 
         [HttpGet(Endpoints.Reports.GetById)]
