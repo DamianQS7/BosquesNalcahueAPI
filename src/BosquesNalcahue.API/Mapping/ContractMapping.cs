@@ -13,7 +13,11 @@ namespace BosquesNalcahue.API.Mapping
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
                 ProductType = request.ProductType,
-                Species = request.Species
+                ProductName = request.ProductName,
+                Species = request.Species,
+                SortBy = request.SortBy?.TrimStart('+', '-'),
+                SortOrder = request.SortBy is null ? SortOrder.Descending : 
+                request.SortBy.StartsWith('-') ? SortOrder.Descending : SortOrder.Ascending
             };
         }
     }

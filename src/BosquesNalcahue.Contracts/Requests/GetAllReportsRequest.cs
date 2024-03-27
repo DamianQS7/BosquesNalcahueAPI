@@ -12,6 +12,8 @@ namespace BosquesNalcahue.Contracts.Requests
         public DateTimeOffset? StartDate { get; init; }
         public DateTimeOffset? EndDate { get; init; }
         public string? ProductType { get; init; }
+        public string? ProductName { get; init; }
         public IEnumerable<string>? Species { get; init; }
+        public string? SortBy { get; init; }
     }
 }
