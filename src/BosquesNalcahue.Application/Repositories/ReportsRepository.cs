@@ -61,7 +61,7 @@ public class ReportsRepository : IReportsRepository
     //}
 
     public async Task<IEnumerable<BaseReport>> GetAllAsync(
-        FilteringOptions options, CancellationToken token = default)
+        GetAllReportsOptions options, CancellationToken token = default)
     {
         var collection = _reportsCollection.AsQueryable();
 
@@ -123,12 +123,12 @@ public class ReportsRepository : IReportsRepository
         return report;
     }
 
-    public void FilterAndSort(FilteringOptions options, IMongoQueryable<BaseReport> collection)
+    public void FilterAndSort(GetAllReportsOptions options, IMongoQueryable<BaseReport> collection)
     {
         
     }
 
-    public static FilterDefinition<BaseReport> GenerateFilter(FilteringOptions options)
+    public static FilterDefinition<BaseReport> GenerateFilter(GetAllReportsOptions options)
     {
         var filterBuilder = Builders<BaseReport>.Filter;
         var filter = filterBuilder.Empty;
@@ -159,7 +159,7 @@ public class ReportsRepository : IReportsRepository
         return filter;
     }
 
-    public static SortDefinition<BaseReport> SortDocuments(FilteringOptions options)
+    public static SortDefinition<BaseReport> SortDocuments(GetAllReportsOptions options)
     {
         if (!string.IsNullOrWhiteSpace(options.SortBy))
         {

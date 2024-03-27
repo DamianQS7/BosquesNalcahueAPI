@@ -5,9 +5,9 @@ namespace BosquesNalcahue.API.Mapping
 {
     public static class ContractMapping
     {
-        public static FilteringOptions MapToFilteringOptions(this GetAllReportsRequest request)
+        public static GetAllReportsOptions MapToFilteringOptions(this GetAllReportsRequest request)
         {
-            return new FilteringOptions
+            return new GetAllReportsOptions
             {
                 OperatorName = request.OperatorName,
                 StartDate = request.StartDate,

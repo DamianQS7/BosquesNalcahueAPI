@@ -1,6 +1,6 @@
 ﻿namespace BosquesNalcahue.Application.Models
 {
-    public class FilteringOptions
+    public class GetAllReportsOptions
     {
         // Filters
         public string? OperatorName { get; init; }
