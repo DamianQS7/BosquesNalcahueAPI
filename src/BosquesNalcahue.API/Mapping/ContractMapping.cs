@@ -1,13 +1,15 @@
-﻿using BosquesNalcahue.Application.Models;
+﻿using BosquesNalcahue.Application.Entities;
+using BosquesNalcahue.Application.Models;
 using BosquesNalcahue.Contracts.Requests;
+using BosquesNalcahue.Contracts.Responses;
 
 namespace BosquesNalcahue.API.Mapping
 {
     public static class ContractMapping
     {
-        public static FilteringOptions MapToFilteringOptions(this GetAllReportsRequest request)
+        public static GetAllReportsOptions MapToGetAllReportsOptions(this GetAllReportsRequest request)
         {
-            return new FilteringOptions
+            return new GetAllReportsOptions
             {
                 OperatorName = request.OperatorName,
                 StartDate = request.StartDate,
@@ -17,7 +19,21 @@ namespace BosquesNalcahue.API.Mapping
                 Species = request.Species,
                 SortBy = request.SortBy?.TrimStart('+', '-'),
                 SortOrder = request.SortBy is null ? SortOrder.Descending : 
-                request.SortBy.StartsWith('-') ? SortOrder.Descending : SortOrder.Ascending
+                request.SortBy.StartsWith('-') ? SortOrder.Descending : SortOrder.Ascending,
+                Page = request.Page,
+                PageSize = request.PageSize
+            };
+        }
+
+        public static ReportsResponse MapToReportsResponse(this IEnumerable<BaseReport> reports,
+        int page, int pageSize, int totalCount)
+        {
+            return new ReportsResponse
+            {
+                Items = reports,
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = totalCount
             };
         }
     }

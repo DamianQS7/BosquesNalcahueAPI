@@ -3,7 +3,6 @@ using BosquesNalcahue.Application.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace BosquesNalcahue.Application.Repositories;
@@ -27,7 +26,7 @@ public class ReportsRepository : IReportsRepository
         }
         catch (Exception ex)
         {
-            throw new Exception("Error creating report", ex);
+            throw new Exception("There was an unexpected error creating the report", ex);
         }
     }
 
@@ -46,28 +45,8 @@ public class ReportsRepository : IReportsRepository
         return deleteResult.DeletedCount > 0;
     }
 
-    //public async Task<IEnumerable<BaseReport>> GetAllAsync(
-    //    FilteringOptions options, CancellationToken token = default)
-    //{
-    //    var filter = GenerateFilter(options);
-
-    //    var sort = SortDocuments(options);
-
-    //    var documents = await _reportsCollection.Find(filter)
-    //                                            .Sort(sort)
-    //                                            .ToListAsync(cancellationToken: token);
-
-    //    return documents;
-    //}
-
-    public async Task<IEnumerable<BaseReport>> GetAllAsync(
-        FilteringOptions options, CancellationToken token = default)
+    public void FilterDocuments(GetAllReportsOptions options, ref IMongoQueryable<BaseReport> collection)
     {
-        var documents = _reportsCollection.Find(Builders<BaseReport>.Filter.Empty).Sort(SortDocuments(options))
-            .ToListAsync(cancellationToken: token);
-        var collection = _reportsCollection.AsQueryable();
-
-        // Filtering
         if (!string.IsNullOrWhiteSpace(options.OperatorName))
         {
             var regex = new Regex(options.OperatorName, RegexOptions.IgnoreCase);
@@ -94,7 +73,17 @@ public class ReportsRepository : IReportsRepository
 
         if (!string.IsNullOrEmpty(options.ProductName))
             collection = collection.Where(report => report.ProductName == options.ProductName);
+    }
 
+    public async Task<IEnumerable<BaseReport>> GetAllAsync(
+        GetAllReportsOptions options, CancellationToken token = default)
+    {
+        var collection = _reportsCollection.AsQueryable();
+
+        // Filtering
+        FilterDocuments(options, ref collection);
+
+        // Sorting
         if (!string.IsNullOrEmpty(options.SortBy))
         {
             collection = options.SortBy.ToLower() switch
@@ -102,9 +91,9 @@ public class ReportsRepository : IReportsRepository
                 "operatorname" => options.SortOrder == SortOrder.Ascending
                                         ? collection.OrderBy(d => d.OperatorName)
                                         : collection.OrderByDescending(d => d.OperatorName),
-                "producttype" => options.SortOrder == SortOrder.Ascending
-                                        ? collection.OrderBy(d => d.ProductType)
-                                        : collection.OrderByDescending(d => d.ProductType),
+                "clientName" => options.SortOrder == SortOrder.Ascending
+                                        ? collection.OrderBy(d => d.ClientName)
+                                        : collection.OrderByDescending(d => d.ClientName),
                 _ => options.SortOrder == SortOrder.Ascending
                                         ? collection.OrderBy(d => d.Date)
                                         : collection.OrderByDescending(d => d.Date),
@@ -112,8 +101,13 @@ public class ReportsRepository : IReportsRepository
         }
         else
         {
-            collection = collection.OrderBy(d => d.Date);
+            collection = collection.OrderByDescending(d => d.Date);
         }
+
+        
+        // Pagination
+        collection = collection.Skip((options.Page - 1) * options.PageSize)
+                               .Take(options.PageSize);
 
         return await collection.ToListAsync(cancellationToken: token);
     }
@@ -125,55 +119,13 @@ public class ReportsRepository : IReportsRepository
         return report;
     }
 
-    public void FilterAndSort(FilteringOptions options, IMongoQueryable<BaseReport> collection)
+    public async Task<int> GetTotalReports(GetAllReportsOptions options, CancellationToken token = default)
     {
-        
-    }
+        var collection = _reportsCollection.AsQueryable();
 
-    public static FilterDefinition<BaseReport> GenerateFilter(FilteringOptions options)
-    {
-        var filterBuilder = Builders<BaseReport>.Filter;
-        var filter = filterBuilder.Empty;
+        FilterDocuments(options, ref collection);
 
-        if (!string.IsNullOrWhiteSpace(options.OperatorName))
-        {
-            var regex = new Regex(options.OperatorName, RegexOptions.IgnoreCase);
-
-            var operatorNameFilter = filterBuilder.Regex(report => report.OperatorName,
-                               new BsonRegularExpression(regex));
-
-            filter &= operatorNameFilter;
-        }
-
-
-        if (options.StartDate.HasValue)
-            filter &= filterBuilder.Gte(report => report.Date, options.StartDate);
-
-        if (options.EndDate.HasValue)
-            filter &= filterBuilder.Lte(report => report.Date, options.EndDate);
-
-        if (!string.IsNullOrWhiteSpace(options.ProductType))
-            filter &= filterBuilder.Eq(report => report.ProductType, options.ProductType);
-
-        if (options.Species is not null && options.Species.Any())
-            filter &= filterBuilder.All(report => report.Species, options.Species);
-
-        return filter;
-    }
-
-    public static SortDefinition<BaseReport> SortDocuments(FilteringOptions options)
-    {
-        if (!string.IsNullOrWhiteSpace(options.SortBy))
-        {
-            if (options.SortOrder == SortOrder.Ascending)
-                return Builders<BaseReport>.Sort.Ascending(d => d.Date);
-            else
-                return Builders<BaseReport>.Sort.Descending(d => d.Date);
-        }
-        else
-        {
-            return Builders<BaseReport>.Sort.Ascending(report => report.Date);
-        }
+        return await collection.CountAsync(cancellationToken: token);
     }
 
     public async Task<bool> ReplaceAsync(BaseReport report, CancellationToken token = default)

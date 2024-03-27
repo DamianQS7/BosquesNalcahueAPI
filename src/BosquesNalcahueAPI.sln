@@ -3,19 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BosquesNalcahue.API", "BosquesNalcahue.API\BosquesNalcahue.API.csproj", "{399D60BB-0CA1-44BB-BB15-1A3B3BE7BC8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BosquesNalcahue.API", "BosquesNalcahue.API\BosquesNalcahue.API.csproj", "{399D60BB-0CA1-44BB-BB15-1A3B3BE7BC8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BosquesNalcahue.Application", "BosquesNalcahue.Application\BosquesNalcahue.Application.csproj", "{074C21F6-B19A-4606-902F-74E8D888E5CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BosquesNalcahue.Application", "BosquesNalcahue.Application\BosquesNalcahue.Application.csproj", "{074C21F6-B19A-4606-902F-74E8D888E5CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BosquesNalcahue.Contracts", "BosquesNalcahue.Contracts\BosquesNalcahue.Contracts.csproj", "{192F00F9-B2FE-441C-BE15-1BB9A46F258A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BosquesNalcahue.Contracts", "BosquesNalcahue.Contracts\BosquesNalcahue.Contracts.csproj", "{192F00F9-B2FE-441C-BE15-1BB9A46F258A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BosquesNalcahue.Tests.Unit", "BosquesNalcahue.Tests.Unit\BosquesNalcahue.Tests.Unit.csproj", "{20E0C201-F482-4B08-8C67-63A659D273B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{399D60BB-0CA1-44BB-BB15-1A3B3BE7BC8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -30,5 +29,15 @@ Global
 		{192F00F9-B2FE-441C-BE15-1BB9A46F258A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{192F00F9-B2FE-441C-BE15-1BB9A46F258A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{192F00F9-B2FE-441C-BE15-1BB9A46F258A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20E0C201-F482-4B08-8C67-63A659D273B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20E0C201-F482-4B08-8C67-63A659D273B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20E0C201-F482-4B08-8C67-63A659D273B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20E0C201-F482-4B08-8C67-63A659D273B0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {335B69E6-AE04-4141-BC9A-43F9EB4B2F9E}
 	EndGlobalSection
 EndGlobal

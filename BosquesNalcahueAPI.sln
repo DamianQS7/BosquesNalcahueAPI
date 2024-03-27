@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{8C17F3B5-2FD9-44CD-9A4F-9F2425F66AB5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BosquesNalcahue.Tests.Unit", "test\BosquesNalcahue.Tests.Unit\BosquesNalcahue.Tests.Unit.csproj", "{A7287314-9AF5-42F1-8D6B-039D4CC5A0FD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9581A552-73FD-419C-B848-3B67B16CFC2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BosquesNalcahue.API", "src\BosquesNalcahue.API\BosquesNalcahue.API.csproj", "{A149191A-B535-4D68-8EF9-0C0996A7E356}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BosquesNalcahue.Application", "src\BosquesNalcahue.Application\BosquesNalcahue.Application.csproj", "{CE72F449-3390-43FA-B63B-905AEBA1D075}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BosquesNalcahue.Contracts", "src\BosquesNalcahue.Contracts\BosquesNalcahue.Contracts.csproj", "{AD966AB6-D821-4A5E-920A-5AD3DB575AA7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A7287314-9AF5-42F1-8D6B-039D4CC5A0FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7287314-9AF5-42F1-8D6B-039D4CC5A0FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7287314-9AF5-42F1-8D6B-039D4CC5A0FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7287314-9AF5-42F1-8D6B-039D4CC5A0FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A149191A-B535-4D68-8EF9-0C0996A7E356}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A149191A-B535-4D68-8EF9-0C0996A7E356}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A149191A-B535-4D68-8EF9-0C0996A7E356}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A149191A-B535-4D68-8EF9-0C0996A7E356}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE72F449-3390-43FA-B63B-905AEBA1D075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE72F449-3390-43FA-B63B-905AEBA1D075}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE72F449-3390-43FA-B63B-905AEBA1D075}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE72F449-3390-43FA-B63B-905AEBA1D075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD966AB6-D821-4A5E-920A-5AD3DB575AA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD966AB6-D821-4A5E-920A-5AD3DB575AA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD966AB6-D821-4A5E-920A-5AD3DB575AA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD966AB6-D821-4A5E-920A-5AD3DB575AA7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A7287314-9AF5-42F1-8D6B-039D4CC5A0FD} = {8C17F3B5-2FD9-44CD-9A4F-9F2425F66AB5}
+		{A149191A-B535-4D68-8EF9-0C0996A7E356} = {9581A552-73FD-419C-B848-3B67B16CFC2D}
+		{CE72F449-3390-43FA-B63B-905AEBA1D075} = {9581A552-73FD-419C-B848-3B67B16CFC2D}
+		{AD966AB6-D821-4A5E-920A-5AD3DB575AA7} = {9581A552-73FD-419C-B848-3B67B16CFC2D}
+	EndGlobalSection
+EndGlobal
