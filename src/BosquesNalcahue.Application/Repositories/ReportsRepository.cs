@@ -27,7 +27,7 @@ public class ReportsRepository : IReportsRepository
         }
         catch (Exception ex)
         {
-            throw new Exception("Error creating report", ex);
+            throw new Exception("There was an unexpected error creating the report", ex);
         }
     }
 
@@ -63,8 +63,6 @@ public class ReportsRepository : IReportsRepository
     public async Task<IEnumerable<BaseReport>> GetAllAsync(
         FilteringOptions options, CancellationToken token = default)
     {
-        var documents = _reportsCollection.Find(Builders<BaseReport>.Filter.Empty).Sort(SortDocuments(options))
-            .ToListAsync(cancellationToken: token);
         var collection = _reportsCollection.AsQueryable();
 
         // Filtering
@@ -102,9 +100,9 @@ public class ReportsRepository : IReportsRepository
                 "operatorname" => options.SortOrder == SortOrder.Ascending
                                         ? collection.OrderBy(d => d.OperatorName)
                                         : collection.OrderByDescending(d => d.OperatorName),
-                "producttype" => options.SortOrder == SortOrder.Ascending
-                                        ? collection.OrderBy(d => d.ProductType)
-                                        : collection.OrderByDescending(d => d.ProductType),
+                "clientName" => options.SortOrder == SortOrder.Ascending
+                                        ? collection.OrderBy(d => d.ClientName)
+                                        : collection.OrderByDescending(d => d.ClientName),
                 _ => options.SortOrder == SortOrder.Ascending
                                         ? collection.OrderBy(d => d.Date)
                                         : collection.OrderByDescending(d => d.Date),
@@ -112,7 +110,7 @@ public class ReportsRepository : IReportsRepository
         }
         else
         {
-            collection = collection.OrderBy(d => d.Date);
+            collection = collection.OrderByDescending(d => d.Date);
         }
 
         return await collection.ToListAsync(cancellationToken: token);
