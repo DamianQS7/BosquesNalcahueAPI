@@ -1,5 +1,6 @@
 ﻿using BosquesNalcahue.Application.Entities;
 using BosquesNalcahue.Application.Models;
+using FluentValidation;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -10,12 +11,14 @@ namespace BosquesNalcahue.Application.Repositories;
 public class ReportsRepository : IReportsRepository
 {
     private readonly IMongoCollection<BaseReport> _reportsCollection;
+    private readonly IValidator<GetAllReportsOptions> _optionsValidator;
 
-    public ReportsRepository(IMongoDbOptions mongoDb)
+    public ReportsRepository(IMongoDbOptions mongoDb, IValidator<GetAllReportsOptions> validator)
     {
         MongoClient client = new(mongoDb.Server);
         IMongoDatabase database = client.GetDatabase(mongoDb.Database);
         _reportsCollection = database.GetCollection<BaseReport>(mongoDb.Collection);
+        _optionsValidator = validator;
     }
 
     public async Task CreateAsync(BaseReport report, CancellationToken token = default)
@@ -78,6 +81,10 @@ public class ReportsRepository : IReportsRepository
     public async Task<IEnumerable<BaseReport>> GetAllAsync(
         GetAllReportsOptions options, CancellationToken token = default)
     {
+        // Validate options
+        await _optionsValidator.ValidateAndThrowAsync(options, cancellationToken: token);
+
+        // Get a queryable collection
         var collection = _reportsCollection.AsQueryable();
 
         // Filtering
