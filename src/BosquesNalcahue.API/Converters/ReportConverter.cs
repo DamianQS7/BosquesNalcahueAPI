@@ -13,12 +13,12 @@ namespace BosquesNalcahue.API.Converters
             switch (jsonObject["ReportType"]!.Value<string>())
             {
                 case "SingleProductReport":
-                    var singleProductReport = new SingleProductReport();
+                    SingleProductReport singleProductReport = new();
                     serializer.Populate(jsonObject.CreateReader(), singleProductReport);
                     return singleProductReport;
 
                 case "MultiProductReport":
-                    MultiProductReport multiProductReport = new MultiProductReport();
+                    MultiProductReport multiProductReport = new();
                     serializer.Populate(jsonObject.CreateReader(), multiProductReport);
                     return multiProductReport;
 

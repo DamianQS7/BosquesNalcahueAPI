@@ -8,6 +8,6 @@
         public int Banks { get; set; }
         public double PalomeraHeight { get; set; }
         public double PalomeraWidth { get; set; }
-        public int FinalQuantity { get; set; }
+        public double FinalQuantity { get; set; }
     }
 }
