@@ -11,6 +11,7 @@ namespace BosquesNalcahue.API.Mapping
         {
             return new GetAllReportsOptions
             {
+                Folio = request.Folio,
                 OperatorName = request.OperatorName,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,

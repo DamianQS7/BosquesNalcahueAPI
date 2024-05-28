@@ -9,6 +9,7 @@ namespace BosquesNalcahue.Contracts.Requests
     public class GetAllReportsRequest
     {
         // Filter properties
+        public string? Folio { get; init; }
         public string? OperatorName { get; init; }
         public DateTime? StartDate { get; init; }
         public DateTime? EndDate { get; init; }
@@ -21,6 +22,6 @@ namespace BosquesNalcahue.Contracts.Requests
 
         // Pagination properties
         public int Page { get; init; } = 1;
-        public int PageSize { get; init; } = 15;
+        public int PageSize { get; init; } = 10;
     }
 }

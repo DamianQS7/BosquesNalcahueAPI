@@ -57,6 +57,13 @@ public class ReportsRepository : IReportsRepository
             collection = collection.Where(report => regex.IsMatch(report.OperatorName!));
         }
 
+        if (!string.IsNullOrWhiteSpace(options.Folio))
+        {
+            var regex = new Regex(options.Folio, RegexOptions.IgnoreCase);
+
+            collection = collection.Where(report => regex.IsMatch(report.Folio!));
+        }
+
         if (options.StartDate.HasValue)
             collection = collection.Where(report => report.Date >= options.StartDate);
 

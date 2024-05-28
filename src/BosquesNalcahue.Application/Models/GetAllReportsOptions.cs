@@ -3,6 +3,7 @@
     public class GetAllReportsOptions
     {
         // Filters
+        public string? Folio { get; init; }
         public string? OperatorName { get; init; }
         public DateTime? StartDate { get; init; }
         public DateTime? EndDate { get; init; }
