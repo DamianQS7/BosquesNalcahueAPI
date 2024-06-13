@@ -1,0 +1,24 @@
+POST https://localhost:7117/api/reports
+Content-Type: application/json
+
+{
+  "ReportType": "SingleProductReport",
+  "OperatorName": "Kobe Bryant",
+  "Folio": "123456",
+  "Date": "2024-05-26T00:00:00Z",
+  "ClientName": "Montgomery Burns",
+  "ClientId": "123456",
+  "TruckCompany": "Hardwood",
+  "TruckDriver": "Homer Simpson",
+  "TruckDriverId": "123456",
+  "TruckPlate": "CHDK23",
+  "Origin": "Ralco",
+  "ProductType": "Metro Ruma",
+  "ProductName": "Encino",
+  "TruckHeight": 1.26,
+  "TruckLength": 2.05,
+  "Banks": 6,
+  "PalomeraHeight": 1.56,
+  "PalomeraWidth": 1.85,
+  "FinalQuantity": 25
+}

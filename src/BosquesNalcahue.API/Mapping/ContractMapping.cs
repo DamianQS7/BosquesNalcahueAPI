@@ -37,5 +37,40 @@ namespace BosquesNalcahue.API.Mapping
                 TotalCount = totalCount
             };
         }
+
+        public static GetAnalyticsByPeriodOptions ToOptions(this GetAnalyticsByPeriodRequest request)
+        {
+            return new GetAnalyticsByPeriodOptions
+            {
+                StartDate = request.StartDate,
+                EndDate = request.EndDate
+            };
+        }
+
+        public static ReportsCountByPeriodResponse ToResponse(this IEnumerable<ReportsCountDocument> reports)
+        {
+            var response = new ReportsCountByPeriodResponse();
+
+            foreach (var document in reports)
+            {
+                switch (document.ProductType?.ToLower())
+                {
+                    case "leña":
+                        response.Lena = document.Count;
+                        break;
+                    case "metro ruma":
+                        response.MetroRuma = document.Count;
+                        break;
+                    case "trozo aserrable":
+                        response.TrozoAserrable = document.Count;
+                        break;
+                    default:
+                        throw new Exception($"There is a document with an unknown ProductType: {document.ProductType}");
+                }
+            }
+
+            return response;
+        }
+
     }
 }

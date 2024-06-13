@@ -1,0 +1,35 @@
+POST https://localhost:7117/api/reports
+Content-Type: application/json
+
+{
+  "ReportType": "MultiProductReport",
+  "ProductType": "Trozo Aserrable",
+  "OperatorName": "Operator Name",
+  "Folio": "123456",
+  "Date": "2024-06-12T15:23:02.8557566+00:00",
+  "ClientName": "John Doe",
+  "ClientId": "123456",
+  "TruckCompany": "Truck Company",
+  "TruckDriver": "Andreiy Shevchenko",
+  "TruckDriverId": "123456",
+  "TruckPlate": "123456",
+  "FinalQuantity": 100,
+  "FinalVolume": 1000,
+  "Products": [
+      {
+          "Origin": "Origin",
+          "Species": "Species",
+          "Length": 1.25,
+          "QuantitySum": 50,
+          "VolumeSum": 250,
+          "Measurements": [
+              {
+                  "Diameter": 10,
+                  "Quantity": 10,
+                  "Volume": 100,
+                  "Total": 1000
+              }
+          ]
+      }
+  ]
+}

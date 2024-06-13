@@ -11,5 +11,12 @@
             public const string Replace = Base + "/{id}";
             public const string Delete = Base + "/{id}";
         }
+
+        public static class Analytics
+        {
+            private const string Base = "api/analytics";
+            public const string ReportsCountByPeriod = Base + "/reports-count-period";
+            public const string ReportsCountByMonth = Base + "/reports-count-month/{month}";
+        }
     }
 }
