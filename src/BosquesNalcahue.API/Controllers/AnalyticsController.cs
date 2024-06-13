@@ -10,6 +10,16 @@ namespace BosquesNalcahue.API.Controllers
     {
         private readonly IAnalyticsRepository _analyticsRepository = analyticsRepository;
 
+        [HttpGet(Endpoints.Analytics.MonthlyCountBreakdown)]
+        public async Task<IActionResult> GetMonthlyCountBreakdown(CancellationToken token = default)
+        {
+            var countDocuments = await _analyticsRepository.GetMonthlyCountBreakdownAsync(token);
+
+            var count = countDocuments.ToMonthlyCountResponse();
+
+            return Ok(count);
+        }
+
         [HttpGet(Endpoints.Analytics.ReportsCountByMonth)]
         public async Task<IActionResult> GetReportsCountByMonth([FromRoute] int month, CancellationToken token = default)
         {

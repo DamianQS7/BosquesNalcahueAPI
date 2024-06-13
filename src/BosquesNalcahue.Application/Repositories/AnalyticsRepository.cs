@@ -17,6 +17,17 @@ public class AnalyticsRepository : IAnalyticsRepository
         _reportsCollection = database.GetCollection<BaseReport>(options.Collection);
     }
 
+    public async Task<IEnumerable<ReportsCountDocument>> GetMonthlyCountBreakdownAsync(CancellationToken token = default)
+    {
+        var results = _reportsCollection.AsQueryable()
+           .Where(doc => doc.Date.Year == DateTime.Now.Year) // To display only the current year monthly breakdown
+           .GroupBy(group => new { group.ProductType, group.Date.Month, group.Date.Year }) // Group by ProductType, month, and year
+           .Select(group => new ReportsCountDocument { ProductType = group.Key.ProductType, Month = group.Key.Month, Count = group.Count() })
+           .ToListAsync(cancellationToken: token);
+
+        return await results;
+    }
+
     public async Task<IEnumerable<ReportsCountDocument>> GetReportCountByMonthAsync(int month, CancellationToken token = default)
     {
         var results = _reportsCollection.AsQueryable()

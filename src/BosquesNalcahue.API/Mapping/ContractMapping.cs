@@ -19,7 +19,7 @@ namespace BosquesNalcahue.API.Mapping
                 ProductName = request.ProductName,
                 Species = request.Species,
                 SortBy = request.SortBy?.TrimStart('+', '-'),
-                SortOrder = request.SortBy is null ? SortOrder.Descending : 
+                SortOrder = request.SortBy is null ? SortOrder.Descending :
                 request.SortBy.StartsWith('-') ? SortOrder.Descending : SortOrder.Ascending,
                 Page = request.Page,
                 PageSize = request.PageSize
@@ -72,5 +72,114 @@ namespace BosquesNalcahue.API.Mapping
             return response;
         }
 
+        //public static ReportsMonthlyCountResponse ToMonthlyCountResponse(this IEnumerable<ReportsCountDocument> reports)
+        //{
+        //    var monthlyResponse = new ReportsMonthlyCountResponse();
+
+        //    var groupedByMonth = reports.GroupBy(r => r.Month);
+
+        //    foreach (var group in groupedByMonth)
+        //    {
+        //        switch (group.Key)
+        //        {
+        //            case 1:
+        //                monthlyResponse.January = group.ToResponse();
+        //                break;
+        //            case 2:
+        //                monthlyResponse.February = group.ToResponse();
+        //                break;
+        //            case 3:
+        //                monthlyResponse.March = group.ToResponse();
+        //                break;
+        //            case 4:
+        //                monthlyResponse.April = group.ToResponse();
+        //                break;
+        //            case 5:
+        //                monthlyResponse.May = group.ToResponse();
+        //                break;
+        //            case 6:
+        //                monthlyResponse.June = group.ToResponse();
+        //                break;
+        //            case 7:
+        //                monthlyResponse.July = group.ToResponse();
+        //                break;
+        //            case 8:
+        //                monthlyResponse.August = group.ToResponse();
+        //                break;
+        //            case 9:
+        //                monthlyResponse.September = group.ToResponse();
+        //                break;
+        //            case 10:
+        //                monthlyResponse.October = group.ToResponse();
+        //                break;
+        //            case 11:
+        //                monthlyResponse.November = group.ToResponse();
+        //                break;
+        //            case 12:
+        //                monthlyResponse.December = group.ToResponse();
+        //                break;
+        //            default:
+        //                throw new Exception($"Invalid month: {group.Key}");
+        //        }
+
+        //    }
+
+        //    return monthlyResponse;
+        //}
+
+        public static ReportsMonthlyCountResponse ToMonthlyCountResponse(this IEnumerable<ReportsCountDocument> reports)
+        {
+            var monthlyResponse = new ReportsMonthlyCountResponse();
+
+            var groupedByMonth = reports.GroupBy(r => r.Month);
+
+            foreach (var group in groupedByMonth)
+            {
+                switch (group.Key)
+                {
+                    case 1:
+                        monthlyResponse.January = group.ToResponse();
+                        break;
+                    case 2:
+                        monthlyResponse.February = group.ToResponse();
+                        break;
+                    case 3:
+                        monthlyResponse.March = group.ToResponse();
+                        break;
+                    case 4:
+                        monthlyResponse.April = group.ToResponse();
+                        break;
+                    case 5:
+                        monthlyResponse.May = group.ToResponse();
+                        break;
+                    case 6:
+                        monthlyResponse.June = group.ToResponse();
+                        break;
+                    case 7:
+                        monthlyResponse.July = group.ToResponse();
+                        break;
+                    case 8:
+                        monthlyResponse.August = group.ToResponse();
+                        break;
+                    case 9:
+                        monthlyResponse.September = group.ToResponse();
+                        break;
+                    case 10:
+                        monthlyResponse.October = group.ToResponse();
+                        break;
+                    case 11:
+                        monthlyResponse.November = group.ToResponse();
+                        break;
+                    case 12:
+                        monthlyResponse.December = group.ToResponse();
+                        break;
+                    default:
+                        throw new Exception($"Invalid month: {group.Key}");
+                }
+
+            }
+
+            return monthlyResponse;
+        }
     }
 }
