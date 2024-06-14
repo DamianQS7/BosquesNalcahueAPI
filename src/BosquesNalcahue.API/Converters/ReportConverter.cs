@@ -9,8 +9,9 @@ namespace BosquesNalcahue.API.Converters
         public override BaseReport ReadJson(JsonReader reader, Type objectType, BaseReport existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             var jsonObject = JObject.Load(reader);
+            var reportType = jsonObject["ReportType"]?.Value<string>() ?? jsonObject["reportType"]?.Value<string>();
 
-            switch (jsonObject["ReportType"]!.Value<string>())
+            switch (reportType)
             {
                 case "SingleProductReport":
                     SingleProductReport singleProductReport = new();

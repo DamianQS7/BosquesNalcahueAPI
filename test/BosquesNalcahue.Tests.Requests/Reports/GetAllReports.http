@@ -1,0 +1,2 @@
+GET https://localhost:7117/api/reports
+Accept: application/json

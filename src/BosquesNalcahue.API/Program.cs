@@ -10,7 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.Configure<MongoDbOptions>(builder.Configuration.GetSection(nameof(MongoDbOptions)));
-
 builder.Services.AddSingleton<IMongoDbOptions>
                     (sp => sp.GetRequiredService<IOptions<MongoDbOptions>>().Value);
 
