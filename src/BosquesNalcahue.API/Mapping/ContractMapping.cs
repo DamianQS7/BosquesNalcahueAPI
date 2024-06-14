@@ -72,111 +72,26 @@ namespace BosquesNalcahue.API.Mapping
             return response;
         }
 
-        //public static ReportsMonthlyCountResponse ToMonthlyCountResponse(this IEnumerable<ReportsCountDocument> reports)
-        //{
-        //    var monthlyResponse = new ReportsMonthlyCountResponse();
-
-        //    var groupedByMonth = reports.GroupBy(r => r.Month);
-
-        //    foreach (var group in groupedByMonth)
-        //    {
-        //        switch (group.Key)
-        //        {
-        //            case 1:
-        //                monthlyResponse.January = group.ToResponse();
-        //                break;
-        //            case 2:
-        //                monthlyResponse.February = group.ToResponse();
-        //                break;
-        //            case 3:
-        //                monthlyResponse.March = group.ToResponse();
-        //                break;
-        //            case 4:
-        //                monthlyResponse.April = group.ToResponse();
-        //                break;
-        //            case 5:
-        //                monthlyResponse.May = group.ToResponse();
-        //                break;
-        //            case 6:
-        //                monthlyResponse.June = group.ToResponse();
-        //                break;
-        //            case 7:
-        //                monthlyResponse.July = group.ToResponse();
-        //                break;
-        //            case 8:
-        //                monthlyResponse.August = group.ToResponse();
-        //                break;
-        //            case 9:
-        //                monthlyResponse.September = group.ToResponse();
-        //                break;
-        //            case 10:
-        //                monthlyResponse.October = group.ToResponse();
-        //                break;
-        //            case 11:
-        //                monthlyResponse.November = group.ToResponse();
-        //                break;
-        //            case 12:
-        //                monthlyResponse.December = group.ToResponse();
-        //                break;
-        //            default:
-        //                throw new Exception($"Invalid month: {group.Key}");
-        //        }
-
-        //    }
-
-        //    return monthlyResponse;
-        //}
-
         public static ReportsMonthlyCountResponse ToMonthlyCountResponse(this IEnumerable<ReportsCountDocument> reports)
         {
             var monthlyResponse = new ReportsMonthlyCountResponse();
 
-            var groupedByMonth = reports.GroupBy(r => r.Month);
-
-            foreach (var group in groupedByMonth)
+            foreach (var report in reports)
             {
-                switch (group.Key)
+                switch (report.ProductType?.ToLower())
                 {
-                    case 1:
-                        monthlyResponse.January = group.ToResponse();
+                    case "leña":
+                        monthlyResponse.Lena[report.Month - 1] = report.Count; // Months are 1-indexed, arrays are 0-indexed
                         break;
-                    case 2:
-                        monthlyResponse.February = group.ToResponse();
+                    case "metro ruma":
+                        monthlyResponse.MetroRuma[report.Month - 1] = report.Count;
                         break;
-                    case 3:
-                        monthlyResponse.March = group.ToResponse();
-                        break;
-                    case 4:
-                        monthlyResponse.April = group.ToResponse();
-                        break;
-                    case 5:
-                        monthlyResponse.May = group.ToResponse();
-                        break;
-                    case 6:
-                        monthlyResponse.June = group.ToResponse();
-                        break;
-                    case 7:
-                        monthlyResponse.July = group.ToResponse();
-                        break;
-                    case 8:
-                        monthlyResponse.August = group.ToResponse();
-                        break;
-                    case 9:
-                        monthlyResponse.September = group.ToResponse();
-                        break;
-                    case 10:
-                        monthlyResponse.October = group.ToResponse();
-                        break;
-                    case 11:
-                        monthlyResponse.November = group.ToResponse();
-                        break;
-                    case 12:
-                        monthlyResponse.December = group.ToResponse();
+                    case "trozo aserrable":
+                        monthlyResponse.TrozoAserrable[report.Month - 1] = report.Count;
                         break;
                     default:
-                        throw new Exception($"Invalid month: {group.Key}");
+                        throw new Exception($"Invalid product type: {report.ProductType}");
                 }
-
             }
 
             return monthlyResponse;
