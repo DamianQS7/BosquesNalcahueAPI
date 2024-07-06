@@ -1,9 +1,6 @@
-﻿using BosquesNalcahue.Application.Models;
-using BosquesNalcahue.Application.Repositories;
+﻿using BosquesNalcahue.Application.Repositories;
 using FluentValidation;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace BosquesNalcahue.Application;
 

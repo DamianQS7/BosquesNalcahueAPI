@@ -1,5 +1,4 @@
-﻿
-using BosquesNalcahue.Application.Entities;
+﻿using BosquesNalcahue.Application.Entities;
 using BosquesNalcahue.Application.Models;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
