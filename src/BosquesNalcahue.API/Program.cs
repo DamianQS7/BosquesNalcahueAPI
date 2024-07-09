@@ -3,6 +3,7 @@ using BosquesNalcahue.API.Mapping;
 using BosquesNalcahue.Application;
 using BosquesNalcahue.Application.Entities;
 using BosquesNalcahue.Application.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -17,7 +18,7 @@ builder.Services.AddSingleton<IMongoDbOptions>
                     (sp => sp.GetRequiredService<IOptions<MongoDbOptions>>().Value);
 
 // Identity Configuration
-var identityDbOptions = builder.Configuration.GetSection(MongoIdentityOptions.OptionsName).Get<MongoIdentityOptions>();
+var identityDbOptions = builder.Configuration.GetSection("MongoDbIdentity").Get<MongoIdentityOptions>();
 
 builder.Services.AddDbContext<WebPortalDbContext>(options =>
 {
@@ -25,7 +26,7 @@ builder.Services.AddDbContext<WebPortalDbContext>(options =>
 });
 
 builder.Services
-    .AddIdentityApiEndpoints<WebPortalUser>()
+    .AddIdentity<WebPortalUser, IdentityRole>()
     .AddEntityFrameworkStores<WebPortalDbContext>();
 
 builder.Services.AddReportsApp();
@@ -57,11 +58,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapIdentityApi<WebPortalUser>();
+//app.MapIdentityApi<WebPortalUser>();
 
 app.UseHttpsRedirection();
 
 app.UseCors("AngularApp");
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

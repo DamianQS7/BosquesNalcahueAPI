@@ -1,0 +1,8 @@
+POST https://localhost:7117/api/identity/register
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "password": "Abc123456!",
+  "roles": ["Admin"]
+}
