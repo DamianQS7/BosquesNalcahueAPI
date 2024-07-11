@@ -96,5 +96,15 @@ namespace BosquesNalcahue.API.Mapping
 
             return monthlyResponse;
         }
+
+        public static WebPortalUser MapToAppUser(this RegisterUserRequest request)
+        {
+            return new WebPortalUser
+            {
+                UserName = request.Email,
+                Email = request.Email,
+                IsAdmin = request.IsAdmin
+            };
+        }
     }
 }

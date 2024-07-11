@@ -1,12 +1,14 @@
 ﻿using BosquesNalcahue.API.Mapping;
 using BosquesNalcahue.Application.Repositories;
 using BosquesNalcahue.Contracts.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BosquesNalcahue.API.Controllers
 {
+    [Authorize]
     [ApiController]
-    public class AnalyticsController(IAnalyticsRepository analyticsRepository) : Controller
+    public class AnalyticsController(IAnalyticsRepository analyticsRepository) : ControllerBase
     {
         private readonly IAnalyticsRepository _analyticsRepository = analyticsRepository;
 

@@ -19,5 +19,12 @@
             public const string ReportsCountByMonth = Base + "/reports-count-month/{month}";
             public const string MonthlyCountBreakdown = Base + "/monthly-breakdown";
         }
+
+        public static class Identity
+        {
+            private const string Base = "api/identity";
+            public const string Register = Base + "/register";
+            public const string Login = Base + "/login";
+        }
     }
 }
