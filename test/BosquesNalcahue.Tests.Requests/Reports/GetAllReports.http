@@ -1,2 +1,5 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3Q2QGdtYWlsLmNvbSIsIm5hbWUiOiJ0ZXN0NkBnbWFpbC5jb20iLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjQyMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAiLCJJc0FkbWluIjoiVHJ1ZSIsIm5iZiI6MTcyMDY1ODg5MCwiZXhwIjoxNzIwNjYyNDkwLCJpYXQiOjE3MjA2NTg4OTB9.UuR5zsqK9ngoeJ1RfSKL0p2Dh32kMwMHcqVkwixBkPE
+
 GET https://localhost:7117/api/reports
 Accept: application/json
+//Authorization: Bearer {{token}}

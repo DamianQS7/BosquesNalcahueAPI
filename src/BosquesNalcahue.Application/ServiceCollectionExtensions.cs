@@ -1,4 +1,5 @@
 ﻿using BosquesNalcahue.Application.Repositories;
+using BosquesNalcahue.Application.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,8 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<IReportsRepository, ReportsRepository>();
         services.AddSingleton<IAnalyticsRepository, AnalyticsRepository>();
+        services.AddScoped<IdentityService>();
+        services.AddScoped<JwtService>();
         services.AddValidatorsFromAssemblyContaining<IApplicationMarker>(ServiceLifetime.Singleton);
 
         return services;

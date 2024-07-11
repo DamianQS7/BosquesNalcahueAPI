@@ -2,6 +2,7 @@
 using BosquesNalcahue.Application.Entities;
 using BosquesNalcahue.Application.Repositories;
 using BosquesNalcahue.Contracts.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
@@ -20,6 +21,7 @@ namespace BosquesNalcahue.API.Controllers
             return CreatedAtAction(nameof(GetReportById), new {id = report.Id}, report);
         }
 
+        [Authorize("Admin")]
         [HttpDelete(Endpoints.Reports.Delete)]
         public async Task<IActionResult> DeleteReport([FromRoute] ObjectId id, CancellationToken token = default)
         {
@@ -31,6 +33,7 @@ namespace BosquesNalcahue.API.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpGet(Endpoints.Reports.GetAll)]
         public async Task<IActionResult> GetAllReports(
             [FromQuery] GetAllReportsRequest request, CancellationToken token = default)
@@ -46,6 +49,7 @@ namespace BosquesNalcahue.API.Controllers
             return Ok(response);
         }
 
+        [Authorize]
         [HttpGet(Endpoints.Reports.GetById)]
         public async Task<IActionResult> GetReportById([FromRoute] ObjectId id, CancellationToken token = default)
         {
@@ -57,6 +61,7 @@ namespace BosquesNalcahue.API.Controllers
             return Ok(report);
         }
 
+        [Authorize("Admin")]
         [HttpPut(Endpoints.Reports.Replace)]
         public async Task<IActionResult> ReplaceReportById([FromRoute] ObjectId id,
             [FromBody] BaseReport report, CancellationToken token = default)
@@ -71,9 +76,5 @@ namespace BosquesNalcahue.API.Controllers
 
             return Ok(report);
         }
-
-
-
-
     }
 }

@@ -102,7 +102,8 @@ namespace BosquesNalcahue.API.Mapping
             return new WebPortalUser
             {
                 UserName = request.Email,
-                Email = request.Email
+                Email = request.Email,
+                IsAdmin = request.IsAdmin
             };
         }
     }
