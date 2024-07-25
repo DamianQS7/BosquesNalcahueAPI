@@ -25,6 +25,7 @@
             private const string Base = "api/identity";
             public const string Register = Base + "/register";
             public const string Login = Base + "/login";
+            public const string Refresh = Base + "/refresh";
         }
     }
 }

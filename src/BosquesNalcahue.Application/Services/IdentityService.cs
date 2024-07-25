@@ -8,25 +8,6 @@ namespace BosquesNalcahue.Application.Services
         private readonly UserManager<WebPortalUser> _userManager = userManager;
         private readonly RoleManager<IdentityRole> _roleManager = roleManager;
 
-        public async Task AddRolesToUserAsync(WebPortalUser user, IEnumerable<string>? roles)
-        {
-            if (roles is null)
-            {
-                await _userManager.AddToRolesAsync(user, ["User"]);
-            }
-            else
-            {
-                foreach (var role in roles)
-                {
-                    if (!await _roleManager.RoleExistsAsync(role))
-                    {
-                        await _roleManager.CreateAsync(new IdentityRole(role));
-                    }
-                    await _userManager.AddToRoleAsync(user, role);
-                }
-            }
-        }
-
         public async Task<bool> CheckPasswordAsync(WebPortalUser user, string password) =>
             await _userManager.CheckPasswordAsync(user, password);
 
@@ -35,5 +16,15 @@ namespace BosquesNalcahue.Application.Services
 
         public async Task<WebPortalUser?> FindByEmailAsync(string email) =>
             await _userManager.FindByEmailAsync(email);
+
+        public async Task<WebPortalUser?> FindByNameAsync(string name) =>
+            await _userManager.FindByNameAsync(name);
+
+        public async Task<IdentityResult> UpdateUserWithRefreshToken(WebPortalUser user, string refreshToken, int refreshTokenDuration)
+        {
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(refreshTokenDuration);
+            return await _userManager.UpdateAsync(user);
+        }
     }
 }
