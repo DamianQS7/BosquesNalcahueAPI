@@ -1,0 +1,7 @@
+POST https://localhost:7117/api/identity/refresh
+Content-Type: application/json
+
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3Q4QGdtYWlsLmNvbSIsIm5hbWUiOiJ0ZXN0OCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NDIwMCIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImV4cCI6MTcyMTg4NjA0MiwidW5pcXVlX25hbWUiOiJ0ZXN0OCIsIklzQWRtaW4iOiJGYWxzZSIsIm5iZiI6MTcyMTg4MjQ0MiwiaWF0IjoxNzIxODgyNDQyfQ.-EGxkEDX6CnpTJtf5YnRigvbgdOI39_mYd928YCbST8",
+  "refreshToken": "mIw0MkJoEFMNfnuBiRtlwhyOwfhLk8UtwQAGE7n7O7N1bMN+gmpKhGh0SHeaNyZYX6jLecCOFZiXZFDObW+dIg==",
+}

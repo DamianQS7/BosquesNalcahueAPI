@@ -101,10 +101,13 @@ namespace BosquesNalcahue.API.Mapping
         {
             return new WebPortalUser
             {
-                UserName = request.Email,
+                UserName = request.UserName,
                 Email = request.Email,
                 IsAdmin = request.IsAdmin
             };
         }
+
+        public static UserDto MapToUserDto(this WebPortalUser user) =>
+            new(user.Email!, user.UserName!, user.IsAdmin);
     }
 }

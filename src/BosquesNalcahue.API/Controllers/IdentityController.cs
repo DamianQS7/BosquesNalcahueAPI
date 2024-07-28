@@ -32,11 +32,55 @@ namespace BosquesNalcahue.API.Controllers
             if (!result)
                 return Unauthorized(new AuthResponse { Success = false, Message = "Invalid password." });
 
+            var token = _jwtService.GenerateJwtToken(user);
+
+            var refreshToken = _jwtService.GenerateRefreshToken();
+
+            await _identityService.UpdateUserWithRefreshToken(user, refreshToken, _jwtService.RefreshTokenDurationInDays);
+
             return Ok(new AuthResponse
             {
                 Success = true,
                 Message = "Login successful",
-                Token = _jwtService.GenerateToken(user)
+                AccessToken = token.Jwt,
+                Expires = token.ValidTo,
+                RefreshToken = refreshToken,
+                UserInfo = user.MapToUserDto()
+            });
+        }
+
+        [HttpPost(Endpoints.Identity.Refresh)]
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request)
+        {
+            var principal = _jwtService.GetPrincipalFromExpiredToken(request.AccessToken);
+
+            if (principal?.Identity?.Name is null)
+                return Unauthorized(new AuthResponse
+                {
+                    Success = false,
+                    Message = "Invalid access token."
+                });
+
+            var user = await _identityService.FindByNameAsync(principal.Identity.Name);
+
+            if (user is null || user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiry < DateTime.UtcNow)
+                return Unauthorized(new AuthResponse
+                {
+                    Success = false,
+                    Message = "Invalid refresh token."
+                });
+
+            var token = _jwtService.GenerateJwtToken(user);
+
+            await _identityService.UpdateUserWithRefreshToken(user, request.RefreshToken, _jwtService.RefreshTokenDurationInDays);
+
+            return Ok(new AuthResponse
+            {
+                Success = true,
+                Message = "Token refreshed successfully",
+                AccessToken = token.Jwt,
+                Expires = token.ValidTo,
+                RefreshToken = request.RefreshToken
             });
         }
 
@@ -56,7 +100,8 @@ namespace BosquesNalcahue.API.Controllers
             var response = new AuthResponse
             {
                 Success = true,
-                Message = "Account created successfully"
+                Message = "Account created successfully",
+                UserInfo = user.MapToUserDto(),
             };
 
             return Ok(response);
