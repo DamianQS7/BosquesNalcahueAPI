@@ -5,39 +5,41 @@ using Azure.Storage.Blobs.Specialized;
 using Azure.Storage.Sas;
 using BosquesNalcahue.Application.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace BosquesNalcahue.Application.Services;
 
 public class BlobStorageService : IBlobStorageService
 {
-    private readonly string _containerName = "testingpdfs";
-    private readonly string connectionString = "DefaultEndpointsProtocol=https;AccountName=bosquesnalcahuestorage;AccountKey=zKMW4ntIt7kNnk86tEkqRk731gnRgjtXAyFLHat690izSWWxfWQCJFATnElr7uy71jXn+K3u3HJA+AStp6ch9Q==;EndpointSuffix=core.windows.net";
-    private readonly BlobServiceClient blobServiceClient;
+    private readonly BlobStorageConfig blobStorageConfig;
+    private readonly BlobServiceClient serviceClient;
+    private readonly BlobContainerClient containerClient;
 
-    public BlobStorageService()
+    public BlobStorageService(IOptions<BlobStorageConfig> options)
     {
-        blobServiceClient = new BlobServiceClient(connectionString);
+        blobStorageConfig = options.Value;
+        serviceClient = new BlobServiceClient(blobStorageConfig.ConnectionString);
+        containerClient = serviceClient.GetBlobContainerClient(blobStorageConfig.ContainerName);
     }
 
-    public Task DeleteBlobAsync(Guid blobId, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteBlobAsync(Guid blobId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        BlobClient blobClient = containerClient.GetBlobClient(blobId.ToString());
+
+        return await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken);
     }
 
     public async Task<Uri> GetUriToBlobAsync(Guid blobId, CancellationToken cancellationToken = default)
     {
-        BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(_containerName);
-
         BlobClient blobClient = containerClient.GetBlobClient(blobId.ToString());
 
         return await CreateBlobSAS(blobClient);
     }
 
-    public async Task<(Guid, string)> UploadBlobAsync(Stream stream, string contentType, CancellationToken cancellationToken = default)
+    public async Task<Guid> UploadBlobAsync(Stream stream, string contentType, CancellationToken cancellationToken = default)
     {
-        BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(_containerName);
-
         var blobName = Guid.NewGuid();
+
         BlobClient blobClient = containerClient.GetBlobClient(blobName.ToString());
 
         await blobClient.UploadAsync(
@@ -45,31 +47,21 @@ public class BlobStorageService : IBlobStorageService
             new BlobHttpHeaders { ContentType = contentType}, 
             cancellationToken: cancellationToken);
 
-        return (blobName, blobClient.Uri.ToString());
+        return blobName;
     }
 
-    private static async Task<Uri> CreateBlobSAS(BlobClient blobClient, string storedPolicyName = null)
+    private static async Task<Uri> CreateBlobSAS(BlobClient blobClient)
     {
         // Check if BlobContainerClient object has been authorized with Shared Key
         if (blobClient.CanGenerateSasUri)
         {
             // Create a SAS token that's valid for one day
-            BlobSasBuilder sasBuilder = new BlobSasBuilder()
+            BlobSasBuilder sasBuilder = new(BlobContainerSasPermissions.Read, DateTimeOffset.UtcNow.AddHours(3))
             {
                 BlobContainerName = blobClient.GetParentBlobContainerClient().Name,
                 BlobName = blobClient.Name,
                 Resource = "b"
             };
-
-            if (storedPolicyName == null)
-            {
-                sasBuilder.ExpiresOn = DateTimeOffset.UtcNow.AddHours(3);
-                sasBuilder.SetPermissions(BlobContainerSasPermissions.Read);
-            }
-            else
-            {
-                sasBuilder.Identifier = storedPolicyName;
-            }
 
             Uri sasURI = blobClient.GenerateSasUri(sasBuilder);
 

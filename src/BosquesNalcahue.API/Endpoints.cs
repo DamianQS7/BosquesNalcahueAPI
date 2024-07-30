@@ -27,5 +27,13 @@
             public const string Login = Base + "/login";
             public const string Refresh = Base + "/refresh";
         }
+
+        public static class Blob
+        {
+            private const string Base = "api/blob";
+            public const string Upload = Base + "/upload";
+            public const string Delete = Base + "/{blobId}";
+            public const string GetUri = Base + "/{blobId}";
+        }
     }
 }
