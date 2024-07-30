@@ -17,5 +17,13 @@ namespace BosquesNalcahue.API.Controllers
 
             return Ok(new { fileName, fileUrl });
         }
+
+        [HttpGet("api/blob/{blobId}")]
+        public async Task<IActionResult> GetAsync(Guid blobId)
+        {
+            var uri = await _blobStorageService.GetUriToBlobAsync(blobId);
+
+            return Ok(new { uri });
+        }
     }
 }
