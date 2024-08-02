@@ -1,9 +1,11 @@
 ﻿using BosquesNalcahue.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BosquesNalcahue.API.Controllers
 {
     [ApiController]
+    [Authorize]
     public class BlobController(IBlobStorageService blobStorageService) : ControllerBase
     {
         private readonly IBlobStorageService _blobStorageService = blobStorageService;
@@ -18,7 +20,7 @@ namespace BosquesNalcahue.API.Controllers
             
             return BadRequest();
         }
-        
+
         [HttpGet(Endpoints.Blob.GetUri)]
         public async Task<IActionResult> GetUriAsync(Guid blobId)
         {

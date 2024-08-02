@@ -21,7 +21,7 @@ namespace BosquesNalcahue.API.Controllers
             return CreatedAtAction(nameof(GetReportById), new {id = report.Id}, report);
         }
 
-        [Authorize("Admin")]
+        [Authorize(Policy = "Admin")]
         [HttpDelete(Endpoints.Reports.Delete)]
         public async Task<IActionResult> DeleteReport([FromRoute] ObjectId id, CancellationToken token = default)
         {

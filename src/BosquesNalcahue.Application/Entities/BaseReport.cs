@@ -12,7 +12,7 @@ namespace BosquesNalcahue.Application.Entities
 
         // Leña, Metro Ruma, Trozo Aserrable.
         public string? ProductType { get; set; }
-        
+        public string? FileId { get; set; }
         public string? OperatorName { get; set; }
         public string? Folio { get; set; }
         public DateTime Date { get; set; }
