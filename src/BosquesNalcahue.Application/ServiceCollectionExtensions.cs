@@ -1,4 +1,5 @@
-﻿using BosquesNalcahue.Application.Repositories;
+﻿using Azure.Storage.Blobs;
+using BosquesNalcahue.Application.Repositories;
 using BosquesNalcahue.Application.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IdentityService>();
         services.AddScoped<JwtService>();
         services.AddValidatorsFromAssemblyContaining<IApplicationMarker>(ServiceLifetime.Singleton);
+        services.AddSingleton<IBlobStorageService, BlobStorageService>();
 
         return services;
     }

@@ -3,9 +3,10 @@ Content-Type: application/json
 
 {
   "ReportType": "SingleProductReport",
+  "FileId": "d9dd9c06-6e56-43ca-bea9-5854767ca061",
   "OperatorName": "Kobe Bryant",
   "Folio": "123456",
-  "Date": "2024-05-26T00:00:00Z",
+  "Date": "2024-08-26T00:00:00Z",
   "ClientName": "Montgomery Burns",
   "ClientId": "123456",
   "TruckCompany": "Hardwood",

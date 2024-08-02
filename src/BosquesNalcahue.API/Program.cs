@@ -13,6 +13,9 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 {
+    // AzureBlobStorage Configuration
+    builder.Services.Configure<BlobStorageConfig>(builder.Configuration.GetSection(nameof(BlobStorageConfig)));
+
     // MongoDb Configuration
     builder.Services.Configure<MongoDbOptions>(builder.Configuration.GetSection(nameof(MongoDbOptions)));
     builder.Services.AddSingleton<IMongoDbOptions>
@@ -57,7 +60,7 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddAuthorization(options =>
     {
-        options.AddPolicy("Admin", policy => policy.RequireClaim("IsAdmin", "true"));
+        options.AddPolicy("Admin", policy => policy.RequireClaim("IsAdmin", "True"));
     });
 
     builder.Services.AddReportsApp();
