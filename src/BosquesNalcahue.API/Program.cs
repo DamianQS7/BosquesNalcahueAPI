@@ -13,6 +13,9 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 {
+    // QuestPDF Community License
+    QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
     // AzureBlobStorage Configuration
     builder.Services.Configure<BlobStorageConfig>(builder.Configuration.GetSection(nameof(BlobStorageConfig)));
 
@@ -63,7 +66,7 @@ var builder = WebApplication.CreateBuilder(args);
         options.AddPolicy("Admin", policy => policy.RequireClaim("IsAdmin", "True"));
     });
 
-    builder.Services.AddReportsApp();
+    builder.Services.AddReportsApp(builder.Environment.ContentRootPath);
 
     builder.Services.AddCors(options =>
     {
