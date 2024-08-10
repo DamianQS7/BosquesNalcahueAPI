@@ -29,7 +29,7 @@ public class BlobStorageService : IBlobStorageService
         return await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken);
     }
 
-    public async Task<Uri> GetUriToBlobAsync(Guid blobId, CancellationToken cancellationToken = default)
+    public async Task<Uri> GetSasUriToBlobAsync(Guid blobId, CancellationToken cancellationToken = default)
     {
         BlobClient blobClient = containerClient.GetBlobClient(blobId.ToString());
 
@@ -38,6 +38,7 @@ public class BlobStorageService : IBlobStorageService
 
     public async Task<Guid> UploadBlobAsync(Stream stream, string contentType, CancellationToken cancellationToken = default)
     {
+        // UPDATE THIS METHOD
         var blobName = Guid.NewGuid();
 
         BlobClient blobClient = containerClient.GetBlobClient(blobName.ToString());

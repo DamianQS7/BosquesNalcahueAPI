@@ -24,7 +24,7 @@ namespace BosquesNalcahue.API.Controllers
         [HttpGet(Endpoints.Blob.GetUri)]
         public async Task<IActionResult> GetUriAsync(Guid blobId)
         {
-            var sasUri = await _blobStorageService.GetUriToBlobAsync(blobId);
+            var sasUri = await _blobStorageService.GetSasUriToBlobAsync(blobId);
 
             return Ok(new { sasUri });
         }

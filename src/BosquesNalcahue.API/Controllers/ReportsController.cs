@@ -76,5 +76,21 @@ namespace BosquesNalcahue.API.Controllers
 
             return Ok(report);
         }
+
+        public async Task<IActionResult> UploadReportAndGeneratePdf([FromBody] BaseReport report, CancellationToken token = default)
+        {
+            await _reportsRepository.CreateAsync(report, token);
+
+            try
+            {
+
+            }
+            catch(Exception e)
+            {
+                
+            }
+
+            return CreatedAtAction(nameof(GetReportById), new { id = report.Id }, report);
+        }
     }
 }
