@@ -30,11 +30,11 @@ namespace BosquesNalcahue.API.Controllers
         }
 
         [HttpPost(Endpoints.Blob.Upload)]
-        public async Task<IActionResult> UploadAsync(IFormFile file)
+        public async Task<IActionResult> UploadAsync(IFormFile file, CancellationToken token)
         {
             using Stream stream = file.OpenReadStream();
 
-            var fileName = await _blobStorageService.UploadBlobAsync(stream, file.ContentType);
+            var fileName = await _blobStorageService.UploadBlobAsync(stream, cancellationToken: token);
 
             return Ok(new { fileName });
         }

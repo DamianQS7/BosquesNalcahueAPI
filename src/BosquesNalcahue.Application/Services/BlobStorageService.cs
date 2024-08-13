@@ -1,10 +1,8 @@
-﻿using Azure.Storage;
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs.Specialized;
 using Azure.Storage.Sas;
 using BosquesNalcahue.Application.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
 namespace BosquesNalcahue.Application.Services;
@@ -33,25 +31,24 @@ public class BlobStorageService : IBlobStorageService
     {
         BlobClient blobClient = containerClient.GetBlobClient(blobId.ToString());
 
-        return await CreateBlobSAS(blobClient);
+        return CreateBlobSAS(blobClient);
     }
 
-    public async Task<Guid> UploadBlobAsync(Stream stream, string contentType, CancellationToken cancellationToken = default)
+    public async Task<Guid> UploadBlobAsync(Stream stream, CancellationToken cancellationToken = default)
     {
-        // UPDATE THIS METHOD
         var blobName = Guid.NewGuid();
 
         BlobClient blobClient = containerClient.GetBlobClient(blobName.ToString());
 
         await blobClient.UploadAsync(
-            stream, 
-            new BlobHttpHeaders { ContentType = contentType}, 
+            stream,
+            new BlobHttpHeaders { ContentType = "application/pdf" },
             cancellationToken: cancellationToken);
 
         return blobName;
     }
 
-    private static async Task<Uri> CreateBlobSAS(BlobClient blobClient)
+    private static Uri CreateBlobSAS(BlobClient blobClient)
     {
         // Check if BlobContainerClient object has been authorized with Shared Key
         if (blobClient.CanGenerateSasUri)

@@ -1,17 +1,21 @@
 ﻿using BosquesNalcahue.API.Mapping;
 using BosquesNalcahue.Application.Entities;
 using BosquesNalcahue.Application.Repositories;
+using BosquesNalcahue.Application.Services;
 using BosquesNalcahue.Contracts.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using QuestPDF.Fluent;
 
 namespace BosquesNalcahue.API.Controllers
 {
     [ApiController]
-    public class ReportsController(IReportsRepository reportsRepository) : ControllerBase
+    public class ReportsController(IReportsRepository reportsRepository, IBlobStorageService blobStorageService, PdfGeneratorService pdfService) : ControllerBase
     {
         private readonly IReportsRepository _reportsRepository = reportsRepository;
+        private readonly IBlobStorageService _blobStorageService = blobStorageService;
+        private readonly PdfGeneratorService _pdfService = pdfService;
 
         [HttpPost(Endpoints.Reports.Create)]
         public async Task<IActionResult> CreateReport([FromBody] BaseReport report, CancellationToken token = default)
@@ -77,20 +81,67 @@ namespace BosquesNalcahue.API.Controllers
             return Ok(report);
         }
 
-        public async Task<IActionResult> UploadReportAndGeneratePdf([FromBody] BaseReport report, CancellationToken token = default)
+        [HttpPost(Endpoints.Reports.UploadSingleProductReport)]
+        public async Task<IActionResult> UploadSingleProductReportAsync([FromBody] SingleProductReport report, CancellationToken token = default)
         {
+            // Add the report to the database
+            await _reportsRepository.CreateAsync(report, token);
+    
+            try
+            {
+                // Create a new PDF document as byte array
+                var document = report.ProductType switch
+                {
+                    "Lena" => _pdfService.CreateLenaReport(report),
+                    "Metro Ruma" => _pdfService.CreateMetroRumaReport(report),
+                    _ => throw new ArgumentException("Invalid product type")
+                };
+
+                byte[] pdf = document.GeneratePdf();
+
+                // Upload the PDF to the Blob Storage
+                using Stream stream = new MemoryStream(pdf);
+                var blobId = await _blobStorageService.UploadBlobAsync(stream, cancellationToken: token);
+
+                // Return the file to Download
+                return File(pdf, "application/pdf", blobId.ToString());
+            }
+            catch (Exception)
+            {
+                // Manually delete the report from the database
+                await _reportsRepository.DeleteByIdAsync(report.Id, token);
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost(Endpoints.Reports.UploadMultiProductReport)]
+        public async Task<IActionResult> UploadMultiProductReportAsync([FromBody] MultiProductReport report, CancellationToken token = default)
+        {
+            // Add the report to the database
             await _reportsRepository.CreateAsync(report, token);
 
             try
             {
+                // Create a new PDF document as byte array
+                var document = _pdfService.CreateTrozoAserrableReport(report);
 
+                byte[] pdf = document.GeneratePdf();
+
+                // Upload the PDF to the Blob Storage
+                using Stream stream = new MemoryStream(pdf);
+                var blobId = await _blobStorageService.UploadBlobAsync(stream, cancellationToken: token);
+
+                // Return the file to Download
+                return File(pdf, "application/pdf", blobId.ToString());
             }
-            catch(Exception e)
+            catch (Exception)
             {
-                
+                // Manually delete the report from the database
+                await _reportsRepository.DeleteByIdAsync(report.Id, token);
             }
 
-            return CreatedAtAction(nameof(GetReportById), new { id = report.Id }, report);
+            return BadRequest();
         }
     }
 }
