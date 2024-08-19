@@ -37,7 +37,7 @@ namespace BosquesNalcahue.API.Controllers
             return Ok();
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet(Endpoints.Reports.GetAll)]
         public async Task<IActionResult> GetAllReports(
             [FromQuery] GetAllReportsRequest request, CancellationToken token = default)
@@ -86,30 +86,31 @@ namespace BosquesNalcahue.API.Controllers
         {
             // Add the report to the database
             await _reportsRepository.CreateAsync(report, token);
-    
+
+            // Create a new PDF document as byte array
+            var document = report.ProductType switch
+            {
+                "Leña" => _pdfService.CreateLenaReport(report),
+                "Metro Ruma" => _pdfService.CreateMetroRumaReport(report),
+                _ => throw new ArgumentException("Invalid product type")
+            };
+
+            byte[] pdf = document.GeneratePdf();
+            var stream = new MemoryStream(pdf);
             try
             {
-                // Create a new PDF document as byte array
-                var document = report.ProductType switch
-                {
-                    "Lena" => _pdfService.CreateLenaReport(report),
-                    "Metro Ruma" => _pdfService.CreateMetroRumaReport(report),
-                    _ => throw new ArgumentException("Invalid product type")
-                };
-
-                byte[] pdf = document.GeneratePdf();
-
                 // Upload the PDF to the Blob Storage
-                using Stream stream = new MemoryStream(pdf);
-                var blobId = await _blobStorageService.UploadBlobAsync(stream, cancellationToken: token);
+                string fileName = report.FileId ?? "";
+                await _blobStorageService.UploadBlobAsync(fileName, stream, cancellationToken: token);
 
                 // Return the file to Download
-                return File(pdf, "application/pdf", blobId.ToString());
+                return File(pdf, "application/pdf", fileName + ".pdf");
             }
             catch (Exception)
             {
                 // Manually delete the report from the database
                 await _reportsRepository.DeleteByIdAsync(report.Id, token);
+                stream.Dispose();
             }
 
             return BadRequest();
@@ -121,27 +122,34 @@ namespace BosquesNalcahue.API.Controllers
             // Add the report to the database
             await _reportsRepository.CreateAsync(report, token);
 
+            // Create a new PDF document as byte array
+            var document = _pdfService.CreateTrozoAserrableReport(report);
+            byte[] pdf = document.GeneratePdf();
+            Stream stream = new MemoryStream(pdf);
+
             try
             {
-                // Create a new PDF document as byte array
-                var document = _pdfService.CreateTrozoAserrableReport(report);
-
-                byte[] pdf = document.GeneratePdf();
-
                 // Upload the PDF to the Blob Storage
-                using Stream stream = new MemoryStream(pdf);
-                var blobId = await _blobStorageService.UploadBlobAsync(stream, cancellationToken: token);
+                string fileName = report.FileId ?? "";
+                await _blobStorageService.UploadBlobAsync(fileName, stream, cancellationToken: token);
 
                 // Return the file to Download
-                return File(pdf, "application/pdf", blobId.ToString());
+                return File(pdf, "application/pdf", fileName + ".pdf");
             }
             catch (Exception)
             {
                 // Manually delete the report from the database
                 await _reportsRepository.DeleteByIdAsync(report.Id, token);
+                stream.Dispose();
             }
 
             return BadRequest();
+        }
+
+        [HttpGet("api/reports/test")]
+        public IActionResult Test()
+        {
+            return Ok("Hello World");
         }
     }
 }

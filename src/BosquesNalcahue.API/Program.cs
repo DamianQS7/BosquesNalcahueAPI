@@ -70,9 +70,16 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddCors(options =>
     {
-        options.AddPolicy("AngularApp", policy =>
+        //options.AddPolicy("AngularApp", policy =>
+        //{
+        //    policy.WithOrigins("http://localhost:4200")
+        //        .AllowAnyMethod()
+        //        .AllowAnyHeader();
+        //});
+
+        options.AddPolicy("Testing", policy =>
         {
-            policy.WithOrigins("http://localhost:4200")
+            policy.AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader();
         });
@@ -101,7 +108,7 @@ var app = builder.Build();
 
     app.UseHttpsRedirection();
 
-    app.UseCors("AngularApp");
+    app.UseCors("Testing");
 
     app.UseAuthentication();
 
