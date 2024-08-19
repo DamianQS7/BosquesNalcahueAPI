@@ -11,7 +11,7 @@ namespace BosquesNalcahue.API.Controllers
         private readonly IBlobStorageService _blobStorageService = blobStorageService;
 
         [HttpDelete(Endpoints.Blob.Delete)]
-        public async Task<IActionResult> DeleteAsync(Guid blobId)
+        public async Task<IActionResult> DeleteAsync(string blobId)
         {
             var result = await _blobStorageService.DeleteBlobAsync(blobId);
 
@@ -22,21 +22,21 @@ namespace BosquesNalcahue.API.Controllers
         }
 
         [HttpGet(Endpoints.Blob.GetUri)]
-        public async Task<IActionResult> GetUriAsync(Guid blobId)
+        public async Task<IActionResult> GetUriAsync(string blobId)
         {
-            var sasUri = await _blobStorageService.GetUriToBlobAsync(blobId);
+            var sasUri = await _blobStorageService.GetSasUriToBlobAsync(blobId);
 
             return Ok(new { sasUri });
         }
 
         [HttpPost(Endpoints.Blob.Upload)]
-        public async Task<IActionResult> UploadAsync(IFormFile file)
+        public async Task<IActionResult> UploadAsync(IFormFile file, CancellationToken token)
         {
             using Stream stream = file.OpenReadStream();
 
-            var fileName = await _blobStorageService.UploadBlobAsync(stream, file.ContentType);
+            await _blobStorageService.UploadBlobAsync(file.Name, stream, cancellationToken: token);
 
-            return Ok(new { fileName });
+            return Ok(new { file.Name });
         }
     }
 }

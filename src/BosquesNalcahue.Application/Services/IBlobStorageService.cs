@@ -4,8 +4,8 @@ namespace BosquesNalcahue.Application.Services;
 
 public interface IBlobStorageService
 {
-    Task<Guid> UploadBlobAsync(Stream stream, string contentType, CancellationToken cancellationToken = default);
-    Task<Uri> GetUriToBlobAsync(Guid blobId, CancellationToken cancellationToken = default);
-    Task<bool> DeleteBlobAsync(Guid blobId, CancellationToken cancellationToken = default);
+    Task UploadBlobAsync(string fileName, Stream stream, CancellationToken cancellationToken = default);
+    Task<Uri> GetSasUriToBlobAsync(string blobId, CancellationToken cancellationToken = default);
+    Task<bool> DeleteBlobAsync(string blobId, CancellationToken cancellationToken = default);
     
 }

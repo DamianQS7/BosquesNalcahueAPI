@@ -1,10 +1,8 @@
-﻿using Azure.Storage;
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs.Specialized;
 using Azure.Storage.Sas;
 using BosquesNalcahue.Application.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
 namespace BosquesNalcahue.Application.Services;
@@ -22,35 +20,33 @@ public class BlobStorageService : IBlobStorageService
         containerClient = serviceClient.GetBlobContainerClient(blobStorageConfig.ContainerName);
     }
 
-    public async Task<bool> DeleteBlobAsync(Guid blobId, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteBlobAsync(string blobId, CancellationToken cancellationToken = default)
     {
         BlobClient blobClient = containerClient.GetBlobClient(blobId.ToString());
 
         return await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken);
     }
 
-    public async Task<Uri> GetUriToBlobAsync(Guid blobId, CancellationToken cancellationToken = default)
+    public async Task<Uri> GetSasUriToBlobAsync(string blobId, CancellationToken cancellationToken = default)
     {
-        BlobClient blobClient = containerClient.GetBlobClient(blobId.ToString());
+        BlobClient blobClient = containerClient.GetBlobClient(blobId);
 
-        return await CreateBlobSAS(blobClient);
+        return CreateBlobSAS(blobClient);
     }
 
-    public async Task<Guid> UploadBlobAsync(Stream stream, string contentType, CancellationToken cancellationToken = default)
+    public async Task UploadBlobAsync(string fileName, Stream stream, CancellationToken cancellationToken = default)
     {
-        var blobName = Guid.NewGuid();
+        var blobName = string.IsNullOrEmpty(fileName) ? Guid.NewGuid().ToString() : fileName;
 
-        BlobClient blobClient = containerClient.GetBlobClient(blobName.ToString());
+        BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
         await blobClient.UploadAsync(
-            stream, 
-            new BlobHttpHeaders { ContentType = contentType}, 
+            stream,
+            new BlobHttpHeaders { ContentType = "application/pdf" },
             cancellationToken: cancellationToken);
-
-        return blobName;
     }
 
-    private static async Task<Uri> CreateBlobSAS(BlobClient blobClient)
+    private static Uri CreateBlobSAS(BlobClient blobClient)
     {
         // Check if BlobContainerClient object has been authorized with Shared Key
         if (blobClient.CanGenerateSasUri)

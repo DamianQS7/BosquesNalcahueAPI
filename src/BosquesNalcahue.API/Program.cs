@@ -13,6 +13,9 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 {
+    // QuestPDF Community License
+    QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
     // AzureBlobStorage Configuration
     builder.Services.Configure<BlobStorageConfig>(builder.Configuration.GetSection(nameof(BlobStorageConfig)));
 
@@ -63,13 +66,20 @@ var builder = WebApplication.CreateBuilder(args);
         options.AddPolicy("Admin", policy => policy.RequireClaim("IsAdmin", "True"));
     });
 
-    builder.Services.AddReportsApp();
+    builder.Services.AddReportsApp(builder.Environment.ContentRootPath);
 
     builder.Services.AddCors(options =>
     {
-        options.AddPolicy("AngularApp", policy =>
+        //options.AddPolicy("AngularApp", policy =>
+        //{
+        //    policy.WithOrigins("http://localhost:4200")
+        //        .AllowAnyMethod()
+        //        .AllowAnyHeader();
+        //});
+
+        options.AddPolicy("Testing", policy =>
         {
-            policy.WithOrigins("http://localhost:4200")
+            policy.AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader();
         });
@@ -98,7 +108,7 @@ var app = builder.Build();
 
     app.UseHttpsRedirection();
 
-    app.UseCors("AngularApp");
+    app.UseCors("Testing");
 
     app.UseAuthentication();
 

@@ -1,17 +1,21 @@
 ﻿using BosquesNalcahue.API.Mapping;
 using BosquesNalcahue.Application.Entities;
 using BosquesNalcahue.Application.Repositories;
+using BosquesNalcahue.Application.Services;
 using BosquesNalcahue.Contracts.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using QuestPDF.Fluent;
 
 namespace BosquesNalcahue.API.Controllers
 {
     [ApiController]
-    public class ReportsController(IReportsRepository reportsRepository) : ControllerBase
+    public class ReportsController(IReportsRepository reportsRepository, IBlobStorageService blobStorageService, PdfGeneratorService pdfService) : ControllerBase
     {
         private readonly IReportsRepository _reportsRepository = reportsRepository;
+        private readonly IBlobStorageService _blobStorageService = blobStorageService;
+        private readonly PdfGeneratorService _pdfService = pdfService;
 
         [HttpPost(Endpoints.Reports.Create)]
         public async Task<IActionResult> CreateReport([FromBody] BaseReport report, CancellationToken token = default)
@@ -33,7 +37,7 @@ namespace BosquesNalcahue.API.Controllers
             return Ok();
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet(Endpoints.Reports.GetAll)]
         public async Task<IActionResult> GetAllReports(
             [FromQuery] GetAllReportsRequest request, CancellationToken token = default)
@@ -75,6 +79,77 @@ namespace BosquesNalcahue.API.Controllers
                 return NotFound();
 
             return Ok(report);
+        }
+
+        [HttpPost(Endpoints.Reports.UploadSingleProductReport)]
+        public async Task<IActionResult> UploadSingleProductReportAsync([FromBody] SingleProductReport report, CancellationToken token = default)
+        {
+            // Add the report to the database
+            await _reportsRepository.CreateAsync(report, token);
+
+            // Create a new PDF document as byte array
+            var document = report.ProductType switch
+            {
+                "Leña" => _pdfService.CreateLenaReport(report),
+                "Metro Ruma" => _pdfService.CreateMetroRumaReport(report),
+                _ => throw new ArgumentException("Invalid product type")
+            };
+
+            byte[] pdf = document.GeneratePdf();
+            var stream = new MemoryStream(pdf);
+            try
+            {
+                // Upload the PDF to the Blob Storage
+                string fileName = report.FileId ?? "";
+                await _blobStorageService.UploadBlobAsync(fileName, stream, cancellationToken: token);
+
+                // Return the file to Download
+                return File(pdf, "application/pdf", fileName + ".pdf");
+            }
+            catch (Exception)
+            {
+                // Manually delete the report from the database
+                await _reportsRepository.DeleteByIdAsync(report.Id, token);
+                stream.Dispose();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost(Endpoints.Reports.UploadMultiProductReport)]
+        public async Task<IActionResult> UploadMultiProductReportAsync([FromBody] MultiProductReport report, CancellationToken token = default)
+        {
+            // Add the report to the database
+            await _reportsRepository.CreateAsync(report, token);
+
+            // Create a new PDF document as byte array
+            var document = _pdfService.CreateTrozoAserrableReport(report);
+            byte[] pdf = document.GeneratePdf();
+            Stream stream = new MemoryStream(pdf);
+
+            try
+            {
+                // Upload the PDF to the Blob Storage
+                string fileName = report.FileId ?? "";
+                await _blobStorageService.UploadBlobAsync(fileName, stream, cancellationToken: token);
+
+                // Return the file to Download
+                return File(pdf, "application/pdf", fileName + ".pdf");
+            }
+            catch (Exception)
+            {
+                // Manually delete the report from the database
+                await _reportsRepository.DeleteByIdAsync(report.Id, token);
+                stream.Dispose();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet("api/reports/test")]
+        public IActionResult Test()
+        {
+            return Ok("Hello World");
         }
     }
 }
