@@ -1,4 +1,5 @@
-﻿using BosquesNalcahue.API.Mapping;
+﻿using BosquesNalcahue.API.Auth;
+using BosquesNalcahue.API.Mapping;
 using BosquesNalcahue.Application.Entities;
 using BosquesNalcahue.Application.Repositories;
 using BosquesNalcahue.Application.Services;
@@ -37,7 +38,7 @@ namespace BosquesNalcahue.API.Controllers
             return Ok();
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet(Endpoints.Reports.GetAll)]
         public async Task<IActionResult> GetAllReports(
             [FromQuery] GetAllReportsRequest request, CancellationToken token = default)
@@ -81,6 +82,7 @@ namespace BosquesNalcahue.API.Controllers
             return Ok(report);
         }
 
+        [ServiceFilter(typeof(ApiKeyAuthFilter))]
         [HttpPost(Endpoints.Reports.UploadSingleProductReport)]
         public async Task<IActionResult> UploadSingleProductReportAsync([FromBody] SingleProductReport report, CancellationToken token = default)
         {
@@ -116,6 +118,7 @@ namespace BosquesNalcahue.API.Controllers
             return BadRequest();
         }
 
+        [ServiceFilter(typeof(ApiKeyAuthFilter))]
         [HttpPost(Endpoints.Reports.UploadMultiProductReport)]
         public async Task<IActionResult> UploadMultiProductReportAsync([FromBody] MultiProductReport report, CancellationToken token = default)
         {
@@ -144,12 +147,6 @@ namespace BosquesNalcahue.API.Controllers
             }
 
             return BadRequest();
-        }
-
-        [HttpGet("api/reports/test")]
-        public IActionResult Test()
-        {
-            return Ok("Hello World");
         }
     }
 }
