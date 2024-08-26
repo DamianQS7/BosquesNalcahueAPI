@@ -1,3 +1,4 @@
+using BosquesNalcahue.API.Auth;
 using BosquesNalcahue.API.Converters;
 using BosquesNalcahue.API.Mapping;
 using BosquesNalcahue.Application;
@@ -41,6 +42,8 @@ var builder = WebApplication.CreateBuilder(args);
         .AddEntityFrameworkStores<WebPortalDbContext>();
 
     // Configure Authentication
+    builder.Services.AddScoped<ApiKeyAuthFilter>();
+
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -70,18 +73,18 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddCors(options =>
     {
-        //options.AddPolicy("AngularApp", policy =>
-        //{
-        //    policy.WithOrigins("http://localhost:4200")
-        //        .AllowAnyMethod()
-        //        .AllowAnyHeader();
-        //});
-
-        options.AddPolicy("Testing", policy =>
+        options.AddPolicy("AngularApp", policy =>
         {
-            policy.AllowAnyOrigin()
+            policy.WithOrigins("http://localhost:4200")
                 .AllowAnyMethod()
                 .AllowAnyHeader();
+        });
+
+        options.AddPolicy("MobileClient", policy =>
+        {
+            policy.AllowAnyOrigin()
+                .WithMethods("POST")
+                .WithHeaders("api-key");
         });
     });
 
@@ -108,7 +111,9 @@ var app = builder.Build();
 
     app.UseHttpsRedirection();
 
-    app.UseCors("Testing");
+    app.UseCors("AngularApp");
+
+    app.UseCors("MobileClient");
 
     app.UseAuthentication();
 
