@@ -8,14 +8,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace BosquesNalcahue.API.Controllers
 {
     [ApiController]
-    public class IdentityController(IdentityService identityService, JwtService jwtService) : ControllerBase
+    public class IdentityController(IdentityService identityService, JwtService jwtService, ILogger<IdentityController> logger) : ControllerBase
     {
         private readonly IdentityService _identityService = identityService;
         private readonly JwtService _jwtService = jwtService;
+        private readonly ILogger<IdentityController> _logger = logger;
 
         [HttpPost(Endpoints.Identity.Login)]
         public async Task<ActionResult<AuthResponse>> Login(LoginRequest request)
         {
+            _logger.LogInformation("Login: Request incoming.");
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -52,6 +55,8 @@ namespace BosquesNalcahue.API.Controllers
         [HttpPost(Endpoints.Identity.Refresh)]
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request)
         {
+            _logger.LogInformation("Refresh: Request incoming.");
+
             var principal = _jwtService.GetPrincipalFromExpiredToken(request.AccessToken);
 
             if (principal?.Identity?.Name is null)
@@ -87,6 +92,8 @@ namespace BosquesNalcahue.API.Controllers
         [HttpPost(Endpoints.Identity.Register)]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserRequest request)
         {
+            _logger.LogInformation("Register: Request incoming.");
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
