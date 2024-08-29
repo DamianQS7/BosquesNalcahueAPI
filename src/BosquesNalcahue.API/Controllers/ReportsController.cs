@@ -13,11 +13,11 @@ namespace BosquesNalcahue.API.Controllers
 {
     [ApiController]
     public class ReportsController(IReportsRepository reportsRepository, IBlobStorageService blobStorageService, 
-        PdfGeneratorService pdfService, ILogger<ReportsController> logger) : ControllerBase
+        IPdfGeneratorService pdfService, ILogger<ReportsController> logger) : ControllerBase
     {
         private readonly IReportsRepository _reportsRepository = reportsRepository;
         private readonly IBlobStorageService _blobStorageService = blobStorageService;
-        private readonly PdfGeneratorService _pdfService = pdfService;
+        private readonly IPdfGeneratorService _pdfService = pdfService;
         private readonly ILogger<ReportsController> _logger = logger;
 
         [HttpPost(Endpoints.Reports.Create)]
