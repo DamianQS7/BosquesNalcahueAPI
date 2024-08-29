@@ -3,7 +3,7 @@
     public class ContractMappingTests
     {
         [Fact]
-        public void MapToFilteringOptions_ShouldCorrectlyMapToOptions_WhenAllPropertiesAreGiven()
+        public void MapToGetAllReportsOptions_ShouldCorrectlyMapToOptions_WhenAllPropertiesAreGiven()
         {
             // Arrange
             var request = new GetAllReportsRequest
@@ -34,7 +34,7 @@
         }
 
         [Fact]
-        public void MapToFilteringOptions_ShouldCorrectlyMapSortOrder_WhenSortByIsNull()
+        public void MapToGetAllReportsOptions_ShouldCorrectlyMapSortOrder_WhenSortByIsNull()
         {
             // Arrange
             var request = new GetAllReportsRequest();
@@ -47,7 +47,7 @@
         }
 
         [Fact]
-        public void MapToFilteringOptions_ShouldCorrectlyMapSortOrder_WhenSortByIsNegative()
+        public void MapToGetAllReportsOptions_ShouldCorrectlyMapSortOrder_WhenSortByIsNegative()
         {
             // Arrange
             var request = new GetAllReportsRequest { SortBy = "-Date"};
@@ -60,7 +60,7 @@
         }
 
         [Fact]
-        public void MapToFilteringOptions_ShouldCorrectlyMapSortOrder_WhenSortByIsPositive()
+        public void MapToGetAllReportsOptions_ShouldCorrectlyMapSortOrder_WhenSortByIsPositive()
         {
             // Arrange
             var request = new GetAllReportsRequest { SortBy = "+Date" };
@@ -73,7 +73,7 @@
         }
 
         [Fact]
-        public void MapToFilteringOptions_ShouldCorrectlyMapPagination_WhenNoDataIsProvided()
+        public void MapToGetAllReportsOptions_ShouldCorrectlyMapPagination_WhenNoDataIsProvided()
         {
             // Arrange
             var request = new GetAllReportsRequest();
@@ -83,7 +83,7 @@
 
             // Assert
             result.Page.Should().Be(1);
-            result.PageSize.Should().Be(15);
+            result.PageSize.Should().Be(10);
         }
 
         [Fact]
@@ -108,6 +108,46 @@
             result.PageSize.Should().Be(pageSize);
             result.TotalCount.Should().Be(totalCount);
             result.HasNextPage.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ToOptions_ShouldCorrectlyMap_FromGetAnalyticsByPeriodRequest()
+        {
+            // Arrange
+            var startDate = DateTime.Now;
+            var endDate = DateTime.Now.AddDays(1);
+            var request = new GetAnalyticsByPeriodRequest { StartDate = startDate, EndDate = endDate };
+
+            // Act
+            var options = request.ToOptions();
+
+            // Assert
+            options.Should().NotBeNull();
+            options.StartDate.Should().Be(startDate);
+            options.EndDate.Should().Be(endDate);
+        }
+
+        [Theory]
+        [InlineData("leña", "metro ruma", 10, 15)]
+        public void ToResponse_ShouldCorrectlyMap_ToTheCorrespondingMonth(string productType1, string productType2, 
+            int month, int count)
+        {
+            // Arrange
+
+            var reports = new List<ReportsCountDocument>
+            {
+                new () { ProductType = productType1, Count = count, Month = month },
+                new () { ProductType = productType2, Count = count, Month = month }
+            };
+
+            // Act
+            var response = reports.ToMonthlyCountResponse();
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Lena[month - 1].Should().Be(count);
+            response.MetroRuma[month - 1].Should().Be(count);
+            response.TrozoAserrable[month].Should().Be(0);
         }
     }
 }

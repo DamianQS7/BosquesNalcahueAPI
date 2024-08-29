@@ -6,7 +6,7 @@ using QuestPDF.Infrastructure;
 
 namespace BosquesNalcahue.Application.Services;
 
-public class PdfGeneratorService(string basePath)
+public class PdfGeneratorService(string basePath) : IPdfGeneratorService
 {
     #region Properties
 

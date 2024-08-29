@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BosquesNalcahue.Application
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BosquesNalcahue.Contracts", "src\BosquesNalcahue.Contracts\BosquesNalcahue.Contracts.csproj", "{AD966AB6-D821-4A5E-920A-5AD3DB575AA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BosquesNalcahue.Tests.Requests", "test\BosquesNalcahue.Tests.Requests\BosquesNalcahue.Tests.Requests.csproj", "{73150359-B906-44E0-8001-E941BE2F5605}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BosquesNalcahue.Tests.Requests", "test\BosquesNalcahue.Tests.Requests\BosquesNalcahue.Tests.Requests.csproj", "{73150359-B906-44E0-8001-E941BE2F5605}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
