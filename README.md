@@ -1,6 +1,8 @@
 # BosquesNalcahue Web API
 _You can find the doc for the API here:_ https://app.eraser.io/workspace/dx4U2YKrkqLNF9nEiOfO?origin=share
 
+_**Note: I am using a free azure plan, so the app might be unavailable sometimes. Please let me know if you want to test it so I can reactive it._
+
 ## Summary
 Web API created  ﻿with ﻿ASP.NET Core 8.0 as part of a larger demo project for a client. You can find the other components in the system in here:
 - .NET MAUI Mobile App => https://github.com/DamianQS7/ForestalCasablancaApp
