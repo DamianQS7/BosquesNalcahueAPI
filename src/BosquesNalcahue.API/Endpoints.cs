@@ -10,8 +10,7 @@
             public const string GetById = Base + "/{id}";
             public const string Replace = Base + "/{id}";
             public const string Delete = Base + "/{id}";
-            public const string UploadSingleProductReport = Base + "/single-product-report";
-            public const string UploadMultiProductReport = Base + "/multi-product-report";
+            public const string UploadReport = Base + "/upload-report";
         }
 
         public static class Analytics
