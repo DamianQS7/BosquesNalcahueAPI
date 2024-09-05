@@ -20,6 +20,7 @@ namespace BosquesNalcahue.API.Controllers
         private readonly IPdfGeneratorService _pdfService = pdfService;
         private readonly ILogger<ReportsController> _logger = logger;
 
+        [Authorize]
         [HttpPost(Endpoints.Reports.Create)]
         public async Task<IActionResult> CreateReport([FromBody] BaseReport report, CancellationToken token = default)
         {
@@ -94,81 +95,73 @@ namespace BosquesNalcahue.API.Controllers
                 return NotFound();
             }
 
-            _logger.LogInformation("ReplaceReportById: Updated report with id {reportId}", id);
-            return Ok(report);
+            // Create a new PDF document as byte array
+            var pdf = GeneratePdfBasedOnReportProductType(report);
+            var stream = new MemoryStream(pdf);
+            
+            try
+            {
+                await _blobStorageService.UploadBlobAsync(report.FileId!, stream, cancellationToken: token);
+                _logger.LogInformation("ReplaceReportById: Updated PDF and report with id {reportId}", id);
+                return Ok(report);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("ReplaceReportById: Operation failed with error: {e}", e);
+            }
+            finally
+            {
+                stream.Dispose();
+            }
+
+            return BadRequest();
         }
 
         [ServiceFilter(typeof(ApiKeyAuthFilter))]
-        [HttpPost(Endpoints.Reports.UploadSingleProductReport)]
-        public async Task<IActionResult> UploadSingleProductReportAsync([FromBody] SingleProductReport report, CancellationToken token = default)
+        [HttpPost(Endpoints.Reports.UploadReport)]
+        public async Task<IActionResult> UploadReportAsync([FromBody] BaseReport report, CancellationToken token = default)
         {
             // Add the report to the database
             await _reportsRepository.CreateAsync(report, token);
 
+            // Create a new PDF document as byte array
+            var pdf = GeneratePdfBasedOnReportProductType(report);
+            var stream = new MemoryStream(pdf);
+
+            try
+            {
+                // Upload the PDF to the Blob Storage
+                string fileName = report.FileId ?? "";
+                await _blobStorageService.UploadBlobAsync(fileName, stream, cancellationToken: token);
+
+                _logger.LogInformation("UploadReportAsync: PDF successfully generated and uploaded to Blob Storage");
+
+                // Return the file to Download
+                return File(pdf, "application/pdf", fileName + ".pdf");
+            }
+            catch (Exception)
+            {
+                // Manually delete the report from the database
+                await _reportsRepository.DeleteByIdAsync(report.Id, token);
+                stream.Dispose();
+                _logger.LogError("UploadReportAsync: Operation failed; deleting report entry from the DB.");
+            }
+
+            return BadRequest();
+        }
+
+        private byte[] GeneratePdfBasedOnReportProductType(BaseReport report) 
+        {
             // Create a new PDF document as byte array
             var document = report.ProductType switch
             {
-                "Leña" => _pdfService.CreateLenaReport(report),
-                "Metro Ruma" => _pdfService.CreateMetroRumaReport(report),
+                "Leña" => _pdfService.CreateLenaReport((SingleProductReport)report),
+                "Metro Ruma" => _pdfService.CreateMetroRumaReport((SingleProductReport)report),
+                "Trozo Aserrable" => _pdfService.CreateTrozoAserrableReport((MultiProductReport)report),
                 _ => throw new ArgumentException("Invalid product type")
             };
 
-            byte[] pdf = document.GeneratePdf();
-            var stream = new MemoryStream(pdf);
-            try
-            {
-                // Upload the PDF to the Blob Storage
-                string fileName = report.FileId ?? "";
-                await _blobStorageService.UploadBlobAsync(fileName, stream, cancellationToken: token);
-
-                _logger.LogInformation("UploadSingleProductReportAsync: PDF successfully generated and uploaded to Blob Storage");
-
-                // Return the file to Download
-                return File(pdf, "application/pdf", fileName + ".pdf");
-            }
-            catch (Exception)
-            {
-                // Manually delete the report from the database
-                await _reportsRepository.DeleteByIdAsync(report.Id, token);
-                stream.Dispose();
-                _logger.LogError("UploadSingleProductReportAsync: Operation failed; deleting report entry from the DB.");
-            }
-
-            return BadRequest();
-        }
-
-        [ServiceFilter(typeof(ApiKeyAuthFilter))]
-        [HttpPost(Endpoints.Reports.UploadMultiProductReport)]
-        public async Task<IActionResult> UploadMultiProductReportAsync([FromBody] MultiProductReport report, CancellationToken token = default)
-        {
-            // Add the report to the database
-            await _reportsRepository.CreateAsync(report, token);
-
-            // Create a new PDF document as byte array
-            var document = _pdfService.CreateTrozoAserrableReport(report);
-            byte[] pdf = document.GeneratePdf();
-            Stream stream = new MemoryStream(pdf);
-
-            try
-            {
-                // Upload the PDF to the Blob Storage
-                string fileName = report.FileId ?? "";
-                await _blobStorageService.UploadBlobAsync(fileName, stream, cancellationToken: token);
-
-                _logger.LogInformation("UploadMultiProductReportAsync: PDF successfully generated and uploaded to Blob Storage");
-
-                // Return the file to Download
-                return File(pdf, "application/pdf", fileName + ".pdf");
-            }
-            catch (Exception)
-            {
-                // Manually delete the report from the database
-                await _reportsRepository.DeleteByIdAsync(report.Id, token);
-                stream.Dispose();
-                _logger.LogError("UploadMultiProductReportAsync: Operation failed; deleting report entry from the DB.");
-            }
-
-            return BadRequest();
+            return document.GeneratePdf();
         }
     }
 }
