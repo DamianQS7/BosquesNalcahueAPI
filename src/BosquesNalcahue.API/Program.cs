@@ -75,7 +75,7 @@ var builder = WebApplication.CreateBuilder(args);
     {
         options.AddPolicy("AngularApp", policy =>
         {
-            policy.WithOrigins("https://ca9449cb.bosquesnalcahue-webportal.pages.dev")
+            policy.WithOrigins("https://bosquesnalcahue-webportal.pages.dev")
                 .AllowAnyMethod()
                 .AllowAnyHeader();
         });
