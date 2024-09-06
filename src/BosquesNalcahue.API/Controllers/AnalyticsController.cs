@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BosquesNalcahue.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class AnalyticsController(IAnalyticsRepository analyticsRepository, ILogger<AnalyticsController> logger) : ControllerBase
     {
