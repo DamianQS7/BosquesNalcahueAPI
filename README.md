@@ -6,7 +6,8 @@ Web API created  ﻿with ﻿ASP.NET Core 8.0 as part of a larger demo project fo
 - .NET MAUI Mobile App => https://github.com/DamianQS7/ForestalCasablancaApp
 - Angular 18 SPA => https://github.com/DamianQS7/BosquesNalcahue_WebPortal
 
-![image](https://github.com/user-attachments/assets/049df711-c990-4dad-b0d0-a10034d499dc)
+![image](https://github.com/user-attachments/assets/969183b1-0044-4707-8b9b-84a3b26085b4)
+
 
 
 The API is designed to centralize data from a Mobile App and serve as the backbone for several key components and services in a larger system. 
