@@ -94,6 +94,7 @@ namespace BosquesNalcahue.API.Controllers
                 _logger.LogInformation("ReplaceReportById: No report was found with id {reportId}", id);
                 return NotFound();
             }
+            _logger.LogInformation("ReplaceReportById: Report with Folio {} updated successfully", report.Folio);
 
             // Create a new PDF document as byte array
             var pdf = GeneratePdfBasedOnReportProductType(report);
@@ -123,6 +124,7 @@ namespace BosquesNalcahue.API.Controllers
         {
             // Add the report to the database
             await _reportsRepository.CreateAsync(report, token);
+            _logger.LogInformation("UploadReportAsync: Report successfully posted to the database. Starting PDF Generation...");
 
             // Create a new PDF document as byte array
             var pdf = GeneratePdfBasedOnReportProductType(report);
