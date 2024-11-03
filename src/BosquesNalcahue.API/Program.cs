@@ -5,6 +5,7 @@ using BosquesNalcahue.Application;
 using BosquesNalcahue.Application.Entities;
 using BosquesNalcahue.Application.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -16,6 +17,13 @@ var builder = WebApplication.CreateBuilder(args);
 {
     // QuestPDF Community License
     QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
+    // Logging configuration
+    builder.Services.AddHttpLogging(options => 
+    {
+        options.LoggingFields = HttpLoggingFields.All;
+        options.CombineLogs = true;
+    });
 
     // AzureBlobStorage Configuration
     builder.Services.Configure<BlobStorageConfig>(builder.Configuration.GetSection(nameof(BlobStorageConfig)));
@@ -73,6 +81,14 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddCors(options =>
     {
+        options.AddPolicy("Testing", policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+
         options.AddPolicy("AngularApp", policy =>
         {
             policy.WithOrigins("https://bosquesnalcahue-webportal.pages.dev")
@@ -104,8 +120,11 @@ var app = builder.Build();
     app.UseSwaggerUI();
 
     //app.MapIdentityApi<WebPortalUser>();
+    app.UseHttpLogging();
 
     app.UseHttpsRedirection();
+
+    app.UseCors("Testing");
 
     app.UseCors("AngularApp");
 
