@@ -1,4 +1,5 @@
-﻿using Azure.Storage.Blobs;
+﻿using Azure;
+using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs.Specialized;
 using Azure.Storage.Sas;
@@ -11,38 +12,42 @@ public class BlobStorageService : IBlobStorageService
 {
     private readonly BlobStorageConfig blobStorageConfig;
     private readonly BlobServiceClient serviceClient;
-    private readonly BlobContainerClient containerClient;
 
     public BlobStorageService(IOptions<BlobStorageConfig> options)
     {
         blobStorageConfig = options.Value;
         serviceClient = new BlobServiceClient(blobStorageConfig.ConnectionString);
-        containerClient = serviceClient.GetBlobContainerClient(blobStorageConfig.ContainerName);
     }
 
-    public async Task<bool> DeleteBlobAsync(string blobId, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteBlobAsync(string containerName, string blobId, CancellationToken cancellationToken = default)
     {
+        var containerClient = serviceClient.GetBlobContainerClient(containerName);
+
         BlobClient blobClient = containerClient.GetBlobClient(blobId.ToString());
 
         return await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken);
     }
 
-    public async Task<Uri> GetSasUriToBlobAsync(string blobId, CancellationToken cancellationToken = default)
+    public async Task<Uri> GetSasUriToBlobAsync(string containerName, string blobId, CancellationToken cancellationToken = default)
     {
+        var containerClient = serviceClient.GetBlobContainerClient(containerName);
+
         BlobClient blobClient = containerClient.GetBlobClient(blobId);
 
         return CreateBlobSAS(blobClient);
     }
 
-    public async Task UploadBlobAsync(string fileName, Stream stream, CancellationToken cancellationToken = default)
+    public async Task<Response<BlobContentInfo>> UploadBlobAsync(string containerName, string fileName, Stream stream, string contentType = "application/pdf", CancellationToken cancellationToken = default)
     {
         var blobName = string.IsNullOrEmpty(fileName) ? Guid.NewGuid().ToString() : fileName;
 
+        var containerClient = serviceClient.GetBlobContainerClient(containerName);
+
         BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
-        await blobClient.UploadAsync(
+        return await blobClient.UploadAsync(
             stream,
-            new BlobHttpHeaders { ContentType = "application/pdf" },
+            new BlobHttpHeaders { ContentType = contentType },
             cancellationToken: cancellationToken);
     }
 
@@ -60,13 +65,13 @@ public class BlobStorageService : IBlobStorageService
             };
 
             Uri sasURI = blobClient.GenerateSasUri(sasBuilder);
-
+            
             return sasURI;
         }
         else
         {
             // Client object is not authorized via Shared Key
-            return null;
+            return new Uri(string.Empty);
         }
     }
 }

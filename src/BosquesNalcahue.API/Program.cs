@@ -21,7 +21,9 @@ var builder = WebApplication.CreateBuilder(args);
     // Logging configuration
     builder.Services.AddHttpLogging(options => 
     {
-        options.LoggingFields = HttpLoggingFields.All;
+        options.LoggingFields = HttpLoggingFields.RequestMethod |
+                                HttpLoggingFields.RequestHeaders |
+                                HttpLoggingFields.Response;
     });
 
     // AzureBlobStorage Configuration

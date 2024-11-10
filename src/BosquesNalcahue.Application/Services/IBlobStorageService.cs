@@ -1,11 +1,12 @@
-﻿using BosquesNalcahue.Application.Models;
+﻿using Azure.Storage.Blobs.Models;
+using Azure;
 
 namespace BosquesNalcahue.Application.Services;
 
 public interface IBlobStorageService
 {
-    Task UploadBlobAsync(string fileName, Stream stream, CancellationToken cancellationToken = default);
-    Task<Uri> GetSasUriToBlobAsync(string blobId, CancellationToken cancellationToken = default);
-    Task<bool> DeleteBlobAsync(string blobId, CancellationToken cancellationToken = default);
+    Task<Response<BlobContentInfo>> UploadBlobAsync(string containerName, string fileName, Stream stream, string contentType = "application/pdf", CancellationToken cancellationToken = default);
+    Task<Uri> GetSasUriToBlobAsync(string containerName, string blobId, CancellationToken cancellationToken = default);
+    Task<bool> DeleteBlobAsync(string containerName, string blobId, CancellationToken cancellationToken = default);
     
 }
