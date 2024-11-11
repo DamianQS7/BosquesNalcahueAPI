@@ -12,7 +12,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<IReportsRepository, ReportsRepository>();
         services.AddSingleton<IAnalyticsRepository, AnalyticsRepository>();
-        services.AddSingleton<IPdfGeneratorService>(new PdfGeneratorService(Path.Combine(contentRootPath, "..", "BosquesNalcahue.Application", "Assets")));
+        services.AddSingleton<IPdfGeneratorService, PdfGeneratorService>();
         services.AddScoped<IdentityService>();
         services.AddScoped<JwtService>();
         services.AddValidatorsFromAssemblyContaining<IApplicationMarker>(ServiceLifetime.Singleton);

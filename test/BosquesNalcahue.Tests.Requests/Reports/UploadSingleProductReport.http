@@ -1,22 +1,23 @@
-POST https://bosquesnalcahue-api.azurewebsites.net/api/reports/upload-report
-api-key: MarrichiweuPupeiPuLamngen
+#POST https://bosquesnalcahue-api.azurewebsites.net/api/reports/upload-report
+POST https://localhost:7117/api/reports/upload-report
 Content-Type: application/json
+api-key: MarrichiweuPupeiPuLamngen
  
 {
   "ReportType": "SingleProductReport",
-  "FileId": "10DM12-03-2024_Damian",
+  "FileId": "15DM10-13-24_Anthony",
   "OperatorName": "David Molina",
-  "Folio": "123456",
-  "Date": "2024-06-12T00:00:00Z",
-  "ClientName": "Damian Lillard",
-  "ClientId": "16.234.743-K",
-  "TruckCompany": "Milwaukee Bucks",
-  "TruckDriver": "Doc Rivers",
-  "TruckDriverId": "12.345.212-2",
+  "Folio": "15DM10/13/24-12:30",
+  "Date": "2024-10-13T00:00:00Z",
+  "ClientName": "Anthony Edwards",
+  "ClientId": "19.934.993-1",
+  "TruckCompany": "Minnesota Timberwolves",
+  "TruckDriver": "Chris Finch",
+  "TruckDriverId": "13.245.512-2",
   "TruckPlate": "CHDK23",
-  "Origin": "Milwaukee",
-  "ProductType": "Metro Ruma",
-  "ProductName": "Nativo",
+  "Origin": "Minnesota",
+  "ProductType": "Leña",
+  "ProductName": "Mezcla Oregon-Nativo",
   "TruckHeight": 1.26,
   "TruckLength": 2.05,
   "Banks": 6,
@@ -24,3 +25,8 @@ Content-Type: application/json
   "PalomeraWidth": 1.85,
   "FinalQuantity": 25
 }
+
+# ProductType: Metro Ruma -> ProductName: Nativo, Oregon, Otro
+# ProductType: Leña -> ProductName: Nativo, Oregon, Encino, Mezcla de Oregon-Nativo
+
+###

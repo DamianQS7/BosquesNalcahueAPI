@@ -21,18 +21,40 @@ public class BlobStorageService : IBlobStorageService
 
     public async Task<bool> DeleteBlobAsync(string containerName, string blobId, CancellationToken cancellationToken = default)
     {
-        var containerClient = serviceClient.GetBlobContainerClient(containerName);
-
-        BlobClient blobClient = containerClient.GetBlobClient(blobId.ToString());
+        BlobClient blobClient = GetBlobClient(containerName, blobId.ToString());
 
         return await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken);
     }
 
+    public async Task<byte[]> DownloadBlobAsync(string containerName, string blobId, CancellationToken cancellationToken = default)
+    {
+        BlobClient blobClient = GetBlobClient(containerName, blobId.ToString());
+        
+        using var memoryStream = new MemoryStream();
+
+        try
+        {
+            await blobClient.DownloadToAsync(memoryStream, cancellationToken);
+            memoryStream.Position = 0;
+            return memoryStream.ToArray();
+        }
+        catch (RequestFailedException ex)
+        {
+            throw new FileNotFoundException($"Blob not found: {containerName}/{blobId}", ex);
+        }
+        catch (TaskCanceledException ex)
+        {
+            throw new TaskCanceledException($"Download cancelled: {containerName}/{blobId}", ex);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Failed to download blob: {containerName}/{blobId}", ex);
+        }
+    }
+
     public async Task<Uri> GetSasUriToBlobAsync(string containerName, string blobId, CancellationToken cancellationToken = default)
     {
-        var containerClient = serviceClient.GetBlobContainerClient(containerName);
-
-        BlobClient blobClient = containerClient.GetBlobClient(blobId);
+        BlobClient blobClient = GetBlobClient(containerName, blobId);
 
         return CreateBlobSAS(blobClient);
     }
@@ -41,9 +63,7 @@ public class BlobStorageService : IBlobStorageService
     {
         var blobName = string.IsNullOrEmpty(fileName) ? Guid.NewGuid().ToString() : fileName;
 
-        var containerClient = serviceClient.GetBlobContainerClient(containerName);
-
-        BlobClient blobClient = containerClient.GetBlobClient(blobName);
+        BlobClient blobClient = GetBlobClient(containerName, blobName);
 
         return await blobClient.UploadAsync(
             stream,
@@ -73,5 +93,12 @@ public class BlobStorageService : IBlobStorageService
             // Client object is not authorized via Shared Key
             return new Uri(string.Empty);
         }
+    }
+
+    private BlobClient GetBlobClient(string containerName, string blobId)
+    {
+        var containerClient = serviceClient.GetBlobContainerClient(containerName);
+
+        return containerClient.GetBlobClient(blobId);
     }
 }
