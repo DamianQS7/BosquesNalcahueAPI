@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BosquesNalcahue.API.Controllers
 {
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class BlobController(IBlobStorageService blobStorageService, ILogger<BlobController> logger) : ControllerBase
     {
         private readonly IBlobStorageService _blobStorageService = blobStorageService;
