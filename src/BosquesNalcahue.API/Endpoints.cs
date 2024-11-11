@@ -32,9 +32,9 @@
         public static class Blob
         {
             private const string Base = "api/blob";
-            public const string Upload = Base + "/upload";
-            public const string Delete = Base + "/{blobId}";
-            public const string GetUri = Base + "/{blobId}";
+            public const string Upload = Base + "/upload/{containerName}";
+            public const string Delete = Base + "/{containerName}/{blobId}";
+            public const string GetUri = Base + "/{containerName}/{blobId}";
         }
     }
 }

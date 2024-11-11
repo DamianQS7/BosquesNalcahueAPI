@@ -3,19 +3,19 @@ Content-Type: application/json
 
 {
   "ReportType": "SingleProductReport",
-  "FileId": "d9dd9c06-6e56-43ca-bea9-5854767ca061",
-  "OperatorName": "Kobe Bryant",
+  "FileId": "10DM12-03-2024_Damian",
+  "OperatorName": "David Molina",
   "Folio": "123456",
-  "Date": "2024-08-12T00:00:00Z",
-  "ClientName": "Montgomery Burns",
-  "ClientId": "123456",
-  "TruckCompany": "Hardwood",
-  "TruckDriver": "Homer Simpson",
-  "TruckDriverId": "123456",
+  "Date": "2024-03-12T00:00:00Z",
+  "ClientName": "Damian Lillard",
+  "ClientId": "16.234.743-K",
+  "TruckCompany": "Milwaukee Bucks",
+  "TruckDriver": "Doc Rivers",
+  "TruckDriverId": "12.345.212-2",
   "TruckPlate": "CHDK23",
-  "Origin": "Ralco",
+  "Origin": "Milwaukee",
   "ProductType": "Metro Ruma",
-  "ProductName": "Encino",
+  "ProductName": "Nativo",
   "TruckHeight": 1.26,
   "TruckLength": 2.05,
   "Banks": 6,
@@ -23,3 +23,6 @@ Content-Type: application/json
   "PalomeraWidth": 1.85,
   "FinalQuantity": 25
 }
+
+// ProductType: Metro Ruma -> ProductName: Nativo, Oregon, Otro
+// ProductType: Lena -> ProductName: Nativo, Oregon, Encino, Mezcla de Oregon-Nativo

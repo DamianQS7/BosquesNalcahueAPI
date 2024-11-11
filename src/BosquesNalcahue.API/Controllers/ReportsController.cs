@@ -19,6 +19,7 @@ namespace BosquesNalcahue.API.Controllers
         private readonly IBlobStorageService _blobStorageService = blobStorageService;
         private readonly IPdfGeneratorService _pdfService = pdfService;
         private readonly ILogger<ReportsController> _logger = logger;
+        private readonly string _containerName = "reports";
 
         [Authorize]
         [HttpPost(Endpoints.Reports.Create)]
@@ -94,6 +95,7 @@ namespace BosquesNalcahue.API.Controllers
                 _logger.LogInformation("ReplaceReportById: No report was found with id {reportId}", id);
                 return NotFound();
             }
+            _logger.LogInformation("ReplaceReportById: Report with Folio {} updated successfully", report.Folio);
 
             // Create a new PDF document as byte array
             var pdf = GeneratePdfBasedOnReportProductType(report);
@@ -101,7 +103,7 @@ namespace BosquesNalcahue.API.Controllers
             
             try
             {
-                await _blobStorageService.UploadBlobAsync(report.FileId!, stream, cancellationToken: token);
+                await _blobStorageService.UploadBlobAsync(_containerName, report.FileId!, stream, cancellationToken: token);
                 _logger.LogInformation("ReplaceReportById: Updated PDF and report with id {reportId}", id);
                 return Ok(report);
             }
@@ -123,6 +125,7 @@ namespace BosquesNalcahue.API.Controllers
         {
             // Add the report to the database
             await _reportsRepository.CreateAsync(report, token);
+            _logger.LogInformation("UploadReportAsync: Report successfully posted to the database. Starting PDF Generation...");
 
             // Create a new PDF document as byte array
             var pdf = GeneratePdfBasedOnReportProductType(report);
@@ -132,7 +135,7 @@ namespace BosquesNalcahue.API.Controllers
             {
                 // Upload the PDF to the Blob Storage
                 string fileName = report.FileId ?? "";
-                await _blobStorageService.UploadBlobAsync(fileName, stream, cancellationToken: token);
+                await _blobStorageService.UploadBlobAsync(_containerName, fileName, stream, cancellationToken: token);
 
                 _logger.LogInformation("UploadReportAsync: PDF successfully generated and uploaded to Blob Storage");
 

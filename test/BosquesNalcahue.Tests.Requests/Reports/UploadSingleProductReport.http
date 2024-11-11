@@ -1,21 +1,22 @@
-POST https://localhost:7117/api/reports/single-product-report
+POST https://bosquesnalcahue-api.azurewebsites.net/api/reports/upload-report
+api-key: MarrichiweuPupeiPuLamngen
 Content-Type: application/json
-
+ 
 {
   "ReportType": "SingleProductReport",
-  "FileId": "",
-  "OperatorName": "Kobe Bryant",
+  "FileId": "10DM12-03-2024_Damian",
+  "OperatorName": "David Molina",
   "Folio": "123456",
-  "Date": "2024-08-13T00:00:00Z",
-  "ClientName": "Montgomery Burns",
-  "ClientId": "123456",
-  "TruckCompany": "Hardwood",
-  "TruckDriver": "Homer Simpson",
-  "TruckDriverId": "123456",
+  "Date": "2024-06-12T00:00:00Z",
+  "ClientName": "Damian Lillard",
+  "ClientId": "16.234.743-K",
+  "TruckCompany": "Milwaukee Bucks",
+  "TruckDriver": "Doc Rivers",
+  "TruckDriverId": "12.345.212-2",
   "TruckPlate": "CHDK23",
-  "Origin": "Ralco",
+  "Origin": "Milwaukee",
   "ProductType": "Metro Ruma",
-  "ProductName": "Encino",
+  "ProductName": "Nativo",
   "TruckHeight": 1.26,
   "TruckLength": 2.05,
   "Banks": 6,
