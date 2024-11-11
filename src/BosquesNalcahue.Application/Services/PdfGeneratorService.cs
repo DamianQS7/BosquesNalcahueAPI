@@ -6,8 +6,10 @@ using QuestPDF.Infrastructure;
 
 namespace BosquesNalcahue.Application.Services;
 
-public class PdfGeneratorService(string basePath) : IPdfGeneratorService
+public class PdfGeneratorService : IPdfGeneratorService
 {
+    private readonly IBlobStorageService _blobService;
+
     #region Properties
 
     public int TitleSize { get; set; } = 18;
@@ -15,11 +17,17 @@ public class PdfGeneratorService(string basePath) : IPdfGeneratorService
     public int NormalSize { get; set; } = 12;
     public int FooterSize { get; set; } = 10;
     public int FirstColumnSize { get; set; } = 140;
-    public string ImagePath { get; set; } = Path.Combine(basePath, "pdf_image.png");
+    public string ImagePath { get; set; }
+    public byte[] ImageBytes { get; set; }
 
     #endregion
 
     #region Methods
+    public PdfGeneratorService(IBlobStorageService blobService)
+    {
+        _blobService = blobService;
+        ImageBytes = GetPdfLogoAsync().Result;
+    }
 
     public IDocument CreateLenaReport(SingleProductReport model)
     {
@@ -37,7 +45,7 @@ public class PdfGeneratorService(string basePath) : IPdfGeneratorService
 
                 // Document Sections
                 page.Header()
-                    .Component(new DocumentHeader("Leña", ImagePath, TitleSize, model.Folio!, model.Date));
+                    .Component(new DocumentHeader("Leña", ImageBytes, TitleSize, model.Folio!, model.Date));
 
                 page.Content()
                     .PaddingVertical(0, Unit.Centimetre)
@@ -118,7 +126,7 @@ public class PdfGeneratorService(string basePath) : IPdfGeneratorService
 
                 // Document Sections
                 page.Header()
-                    .Component(new DocumentHeader("Metro Ruma", ImagePath, TitleSize, model.Folio!, model.Date));
+                    .Component(new DocumentHeader("Metro Ruma", ImageBytes, TitleSize, model.Folio!, model.Date));
 
                 page.Content()
                     .PaddingVertical(0, Unit.Centimetre)
@@ -197,7 +205,7 @@ public class PdfGeneratorService(string basePath) : IPdfGeneratorService
                 #endregion
 
                 page.Header()
-                    .Component(new DocumentHeader("Venta en Trozos", ImagePath, TitleSize, model.Folio!, model.Date));
+                    .Component(new DocumentHeader("Venta en Trozos", ImageBytes, TitleSize, model.Folio!, model.Date));
 
                 page.Content()
                     .PaddingVertical(0, Unit.Centimetre)
@@ -296,6 +304,7 @@ public class PdfGeneratorService(string basePath) : IPdfGeneratorService
         return $"{fileNumber}{userInitials}{formattedDate}_{formattedCliente}.pdf";
     }
 
+    private async Task<byte[]> GetPdfLogoAsync() => await Task.Run(async () => await _blobService.DownloadBlobAsync("assets", "pdf_image.png"));
 
     /// <summary>
     /// Static method that defines the style for the header cells of a table.

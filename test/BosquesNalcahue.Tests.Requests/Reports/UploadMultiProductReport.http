@@ -1,24 +1,42 @@
-POST https://localhost:7117/api/reports/multi-product-report
+POST https://localhost:7117/api/reports/upload-report
 Content-Type: application/json
+api-key: MarrichiweuPupeiPuLamngen
 
 {
   "ReportType": "MultiProductReport",
   "ProductType": "Trozo Aserrable",
-  "OperatorName": "Operator Name",
-  "Folio": "123456",
-  "Date": "2024-06-12T15:23:02.8557566+00:00",
-  "ClientName": "John Doe",
-  "ClientId": "123456",
-  "TruckCompany": "Truck Company",
-  "TruckDriver": "Andreiy Shevchenko",
-  "TruckDriverId": "123456",
-  "TruckPlate": "123456",
+  "FileId": "12DM04-26-24_Damian",
+  "OperatorName": "David Molina",
+  "Folio": "15DM04/26/24-16:30",
+  "Date": "2024-04-26T00:00:00Z",
+  "ClientName": "Giannis Antetokounmpo",
+  "ClientId": "18.274.243-1",
+  "TruckCompany": "Milwaukee Bucks",
+  "TruckDriver": "Doc Rivers",
+  "TruckDriverId": "12.345.212-2",
+  "TruckPlate": "CHDK23",
   "FinalQuantity": 100,
   "FinalVolume": 1000,
+  "Species": ["Ulmo", "Rauli"],
   "Products": [
       {
-          "Origin": "Origin",
-          "Species": "Species",
+          "Origin": "Milwaukee",
+          "Species": "Ulmo",
+          "Length": 1.25,
+          "QuantitySum": 50,
+          "VolumeSum": 250,
+          "Measurements": [
+              {
+                  "Diameter": 10,
+                  "Quantity": 10,
+                  "Volume": 100,
+                  "Total": 1000
+              }
+          ]
+      },
+      {
+          "Origin": "Milwaukee",
+          "Species": "Rauli",
           "Length": 1.25,
           "QuantitySum": 50,
           "VolumeSum": 250,

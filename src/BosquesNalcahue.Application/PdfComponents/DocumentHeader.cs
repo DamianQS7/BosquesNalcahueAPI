@@ -3,10 +3,10 @@ using QuestPDF.Infrastructure;
 
 namespace BosquesNalcahue.Application.PdfComponents
 {
-    public class DocumentHeader(string title, string imagePath, int titleSize, string folio, DateTime reportDate) : IComponent
+    public class DocumentHeader(string title, byte[] imageBytes, int titleSize, string folio, DateTime reportDate) : IComponent
     {
         public string Title { get; set; } = title;
-        public string ImagePath { get; set; } = imagePath;
+        public byte[] ImageBytes { get; set; } = imageBytes;
         public int TitleSize { get; set; } = titleSize;
         public string Folio { get; set; } = folio;
         public DateTime ReportDate { get; set; } = reportDate;
@@ -20,7 +20,7 @@ namespace BosquesNalcahue.Application.PdfComponents
                       .Row(row =>
                       {
                           row.ConstantItem(80)
-                             .Image(ImagePath);
+                             .Image(ImageBytes);
 
                           row.RelativeItem()
                               .AlignRight()
